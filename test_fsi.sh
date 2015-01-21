@@ -73,6 +73,7 @@ fi
 # 
   export FM_MYAPP=$APP
   export METHOD=opt
+  export PETSC_ARCH=linux-opt 
 # ######   $2 ->METHOD  #################
 #   OPTION=$2
 #   if test "$OPTION" = "dbg"; then
@@ -108,17 +109,17 @@ export MED_PATH=$INSTALLATION_DIR/$SALOME_NAME/$MED_NAME
 # GUI_FEMUS="../../"$FM_GUI
 # GUI_CMD="code_femus"
 # 
-# ##############   LIBRARIES ###################
-# ######### MPI ##########
-# export PATH=$MPI_BIN_PATH:$PATH
-# export LD_LIBRARY_PATH=$MPI_LIB_PATH:$LD_LIBRARY_PATH
-# ######## FEMUS #########
-# export LD_LIBRARY_PATH=$LIBMESH_PATH/lib64/:$LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH=$PETSC_DIR/lib/:$LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH=$HDF5_PATH/lib:$LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH=$med_PATH/lib:$LD_LIBRARY_PATH
-# export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
-# ################################################
+##############   LIBRARIES ###################
+######### MPI ##########
+export PATH=$MPI_BIN_PATH:$PATH
+export LD_LIBRARY_PATH=$MPI_LIB_PATH:$LD_LIBRARY_PATH
+######## FEMUS #########
+export LD_LIBRARY_PATH=$LIBMESH_PATH/lib64/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PETSC_DIR/lib/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$HDF5_PATH/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$med_PATH/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
+################################################
 
 
 
@@ -142,9 +143,13 @@ export MED_PATH=$INSTALLATION_DIR/$SALOME_NAME/$MED_NAME
 #     return
 #   fi
 # fi
-  cp -r template_appl/$APP_NAME/   USER_APPL/$1
+  cp -r template_appl/$APP_NAME/   USER_APPL/$APP
   cd USER_APPL/$FM_MYAPP
-  
   echo "APPLICATION=" $FM_MYAPP "APP_NAME=" $APP_NAME "APP_VER=" $APP_VER "METHOD=" $METHOD "in USER_APPL/"$FM_MYAPP
   echo  "path " $PWD 
+  mkdir RESU
+  make gencase
+  mpiexec -np 1 ../gencase/gencase-opt
+  make
+  mpiexec -np 1 fsi_1-opt
   return;
