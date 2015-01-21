@@ -38,40 +38,41 @@ export SAL_VER=6.5.0
 # =============== CHECKING APPLICATION =======================
 # ============================================================
 
-APP=fsi_1
+APP="fsi_1"
 APP_NAME=${APP/%_*/""}
 APP_VER=${APP/#*_/""}
 echo  "APP_NAME" $APP_NAME "APP_VER" $APP_VER
-# if test "$APP_NAME" = "$1";  then APP_NAME="None";fi
-# echo  "APP_NAME" $APP_NAME "APP_VER" $APP_VER
-# cd template_appl 
-# ls
-# if [ -d  $APP_NAME ]; then
-#   echo $APP_NAME " is an application template - ok  "
-#   cd ..
-# else
-#   echo  " "$1" name is invalid: not VALID application template or _n is missing "
-#   cd ..
-#     echo
-#     echo " Use: source configure.sh application_n [option]"
-#     echo
-#     echo "   applications: applications_n (example nse_1, fsi_2, ..; n=version) "
-#     echo " 	nse (example nse_1, nse_2, ..; n=version) "
-#     echo " 	fsi  (example fsi_1,  fsi_2,  ..; n=version) "
-#     echo " 	femlcore (example femlcore_1, femlcore_2, ..; n=version) "
-#     echo " 	turb (example turb_1, turb_2, ..; n=version) "
-#     echo
-#     echo "   [option] : None, opt, dbg, gui, nogui, gencase "
-#     echo "		None = no gui in opt mode "
-#     echo "		opt  = salome gui in opt mode"
-#     echo "		dbg  = no gui in dbg mode"
-#     echo "		nogui= no gui in opt mode"
-#     echo "		gencase= no gui opt mode in gencase directory"
-#     echo
-# fi
+if test "$APP_NAME" = "$1";  then APP_NAME="None";fi
+echo  "APP_NAME" $APP_NAME "APP_VER" $APP_VER
+cd template_appl 
+ls
+if [ -d  $APP_NAME ]; then
+  echo $APP_NAME " is an application template - ok  "
+  cd ..
+else
+  echo  " "$1" name is invalid: not VALID application template or _n is missing "
+  cd ..
+    echo
+    echo " Use: source configure.sh application_n [option]"
+    echo
+    echo "   applications: applications_n (example nse_1, fsi_2, ..; n=version) "
+    echo " 	nse (example nse_1, nse_2, ..; n=version) "
+    echo " 	fsi  (example fsi_1,  fsi_2,  ..; n=version) "
+    echo " 	femlcore (example femlcore_1, femlcore_2, ..; n=version) "
+    echo " 	turb (example turb_1, turb_2, ..; n=version) "
+    echo
+    echo "   [option] : None, opt, dbg, gui, nogui, gencase "
+    echo "		None = no gui in opt mode "
+    echo "		opt  = salome gui in opt mode"
+    echo "		dbg  = no gui in dbg mode"
+    echo "		nogui= no gui in opt mode"
+    echo "		gencase= no gui opt mode in gencase directory"
+    echo
+fi
 # 
 # 
-#   export FM_MYAPP=$1
+  export FM_MYAPP=$APP
+  export METHOD=opt
 # ######   $2 ->METHOD  #################
 #   OPTION=$2
 #   if test "$OPTION" = "dbg"; then
@@ -85,23 +86,23 @@ echo  "APP_NAME" $APP_NAME "APP_VER" $APP_VER
 # 
 #   
 #   
-# # ============================================================
-# # =================  PATH for LIBRARIES  =====================
-# # ============================================================
-# export FEMUS_DIR=$INSTALLATION_DIR/exfemus/
-# # -----------  LIBMESH ---------------
-# export LIBMESH_PATH=$INSTALLATION_DIR/$LIBMESH_NAME/
-# # -----------  PETSC   ---------------
-# export PETSC_DIR=$INSTALLATION_DIR/$PETSC_NAME/
-# # -----------  OPENMPI  ---------------
-# export MPI_BIN_PATH=$INSTALLATION_DIR/$OPENMPI_NAME/bin/
-# export MPI_LIB_PATH=$INSTALLATION_DIR/$OPENMPI_NAME/lib64/
-# # -----------  HDF5  ---------------
-# export HDF5_PATH=$INSTALLATION_DIR/$HDF5_NAME/
-# # -----------  med  ---------------
-# export med_PATH=$INSTALLATION_DIR/$SALOME_NAME/$med3_NAME
-# # -----------  MED  ---------------
-# export MED_PATH=$INSTALLATION_DIR/$SALOME_NAME/$MED_NAME
+# ============================================================
+# =================  PATH for LIBRARIES  =====================
+# ============================================================
+export FEMUS_DIR=$INSTALLATION_DIR/exfemus/
+# -----------  LIBMESH ---------------
+export LIBMESH_PATH=$INSTALLATION_DIR/$LIBMESH_NAME/
+# -----------  PETSC   ---------------
+export PETSC_DIR=$INSTALLATION_DIR/$PETSC_NAME/
+# -----------  OPENMPI  ---------------
+export MPI_BIN_PATH=$INSTALLATION_DIR/$OPENMPI_NAME/bin/
+export MPI_LIB_PATH=$INSTALLATION_DIR/$OPENMPI_NAME/lib64/
+# -----------  HDF5  ---------------
+export HDF5_PATH=$INSTALLATION_DIR/$HDF5_NAME/
+# -----------  med  ---------------
+export med_PATH=$INSTALLATION_DIR/$SALOME_NAME/$med3_NAME
+# -----------  MED  ---------------
+export MED_PATH=$INSTALLATION_DIR/$SALOME_NAME/$MED_NAME
 # # -----------  GUI  ---------------
 # export FM_GUI=gui
 # GUI_FEMUS="../../"$FM_GUI
@@ -127,48 +128,23 @@ echo  "APP_NAME" $APP_NAME "APP_VER" $APP_VER
 # ==== GO TO USER_APPL AND COPY OR CREATE THE APPLICATION FM_MYAPP =====
 # ======================================================================
 #  exist or  create  USER_APPL/$FM_MYAPP directory
-if [ -d  USER_APPL/$FM_MYAPP ]; then
-  # USER_APPL/$FM_MYAPP  exists
-  echo "USER_APPL/"$FM_MYAPP " directory exists  " 
-else
-  # USER_APPL/$FM_MYAPP does not exist
-  echo "USER_APPL/"$FM_MYAPP " directory does not  exist  "
-  echo "Do you want to create the USER_APPL/"$FM_MYAPP  "application ? [yes/no]"
-  read test_app
-  if test "$test_app" = "yes"; then 
-    cp -r template_appl/$APP_NAME/   USER_APPL/$1
-  else
-    return
-  fi
-fi
+# if [ -d  USER_APPL/$FM_MYAPP ]; then
+#   # USER_APPL/$FM_MYAPP  exists
+#   echo "USER_APPL/"$FM_MYAPP " directory exists  " 
+# else
+#   # USER_APPL/$FM_MYAPP does not exist
+#   echo "USER_APPL/"$FM_MYAPP " directory does not  exist  "
+#   echo "Do you want to create the USER_APPL/"$FM_MYAPP  "application ? [yes/no]"
+#   read test_app
+#   if test "$test_app" = "yes"; then 
+#     cp -r template_appl/$APP_NAME/   USER_APPL/$1
+#   else
+#     return
+#   fi
+# fi
+  cp -r template_appl/$APP_NAME/   USER_APPL/$1
   cd USER_APPL/$FM_MYAPP
   
   echo "APPLICATION=" $FM_MYAPP "APP_NAME=" $APP_NAME "APP_VER=" $APP_VER "METHOD=" $METHOD "in USER_APPL/"$FM_MYAPP
   echo  "path " $PWD 
-  
-##############   OPTIONS  ###################
-
-  if test "$OPTION" = "nogui"; then
-   return;
-  fi
-
-  if test "$OPTION" = "gencase"; then
-   $PWD
-   cd ../gencase
-   return;
-  fi
-
-  if test "$OPTION" = "gui"; then
-   cd $GUI_FEMUS
-   python bin/$GUI_CMD gui &
-   cd ../USER_APPL/$FM_MYAPP
-   echo " path " USER_APPL/$FM_MYAPP
-
-   return;
-  fi
-   
-   # salome style GUI ciao
-   cd $GUI_FEMUS
-   python bin/$GUI_CMD  salome &
-   echo $PWD
-   cd ../USER_APPL/$FM_MYAPP
+  return;
