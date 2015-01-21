@@ -88,7 +88,7 @@ fi
 # ============================================================
 # =================  PATH for LIBRARIES  =====================
 # ============================================================
-export FEMUS_DIR=$INSTALLATION_DIR/femus/
+export FEMUS_DIR=$INSTALLATION_DIR/exfemus/
 # -----------  LIBMESH ---------------
 export LIBMESH_PATH=$INSTALLATION_DIR/$LIBMESH_NAME/
 # -----------  PETSC   ---------------
