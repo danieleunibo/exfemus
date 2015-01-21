@@ -1,0 +1,137 @@
+// Copyright (C) 2007-2013  CEA/DEN, EDF R&D, OPEN CASCADE
+//
+// Copyright (C) 2003-2007  OPEN CASCADE, EADS/CCR, LIP6, CEA/DEN,
+// CEDRAT, EDF R&D, LEG, PRINCIPIA R&D, BUREAU VERITAS
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+//
+// See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+//
+
+#ifndef _SALOME_COMM_IDL_
+#define _SALOME_COMM_IDL_
+
+#include "SALOME_Exception.idl"
+
+/*!
+  \file SALOME_Comm.idl \brief This file contains a set of interfaces used for communication
+  between components
+ */
+
+module SALOME {
+  
+  enum TypeOfDataTransmitted { _DOUBLE_,_INT_ };
+
+  enum TypeOfCommunication { CORBA_ , MPI_ , SOCKET_ };
+
+  typedef sequence<double> vectorOfDouble;
+  
+  typedef sequence<long> vectorOfLong;
+  
+  interface MultiCommClass {
+    void setProtocol(in TypeOfCommunication typ);
+  };
+
+  interface ServantLifeCycle {
+    void release();
+  };
+
+  interface Sender {
+    TypeOfDataTransmitted getTypeOfDataTransmitted();
+    void release();
+  };
+
+  interface SenderDouble : Sender {
+    SenderDouble buildOtherWithProtocol(in TypeOfCommunication type);
+  };
+
+  interface SenderInt : Sender {
+    SenderInt buildOtherWithProtocol(in TypeOfCommunication type);
+  };
+
+  //No compulsory copy between double and CORBA::Double
+  interface CorbaDoubleNCSender : SenderDouble {
+    unsigned long getSize();
+    vectorOfDouble sendPart(in unsigned long n1,in unsigned long n2);
+    vectorOfDouble send();
+  };
+
+  //Compulsory copy between double and CORBA::Double
+  interface CorbaDoubleCSender : SenderDouble {
+    unsigned long getSize();
+    //unsigned long getSize2();
+    vectorOfDouble sendPart(in unsigned long n1,in unsigned long n2);
+  };
+
+  //No compulsory copy between int and CORBA::Long
+  interface CorbaLongNCSender : SenderInt {
+    unsigned long getSize();
+    vectorOfLong sendPart(in unsigned long n1,in unsigned long n2);
+    vectorOfLong send();
+  };
+
+  //Compulsory copy between int and CORBA::Long
+  interface CorbaLongCSender : SenderInt {
+    unsigned long getSize();
+    vectorOfLong sendPart(in unsigned long n1,in unsigned long n2);
+  };
+
+  interface MPISender : Sender {
+    typedef struct Parameter {
+      unsigned long myproc;
+      unsigned long tag1;
+      unsigned long tag2;
+      string service;
+    } param;
+    param getParam();
+    void send();
+    void close(in param p);
+  };
+
+  interface MPISenderDouble : SenderDouble,MPISender {
+  };
+
+  interface MPISenderInt : SenderInt,MPISender {
+  };
+
+  interface SocketSender : Sender {
+    typedef struct Parameter {
+      unsigned long lstart;
+      unsigned long lend;
+      unsigned long myport;
+     string internet_address;
+    } param;
+    param getParam();
+    void initCom() raises(SALOME_Exception);
+    void acceptCom() raises(SALOME_Exception);
+    void closeCom();
+    void endOfCom() raises(SALOME_Exception);
+    void send();
+  };
+
+  interface SocketSenderDouble : SenderDouble,SocketSender {
+  };
+
+  interface SocketSenderInt : SenderInt,SocketSender {
+  };
+
+  interface Matrix {
+    SenderDouble getData();
+    long getSizeOfColumn();
+    void release();
+  };
+};
+
+#endif

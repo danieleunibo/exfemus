@@ -1,0 +1,70 @@
+#! /usr/bin/env python
+
+import os
+import sys
+
+# Preliminary work to initialize path to SALOME Python modules
+def __initialize():
+  currentPath = os.path.dirname( os.path.abspath( __file__ ) )
+  homePath = os.path.realpath(os.path.expanduser('~'))
+  appliPath = os.path.relpath(currentPath, homePath)
+
+  pattern = "/bin/salome/appliskel"
+  if appliPath.endswith(pattern):
+    appliPath = appliPath[:-len(pattern)]
+
+  absoluteAppliPath = os.path.join(homePath, appliPath)
+  os.environ['APPLI'] = appliPath # needed to convert .sh environment files
+  os.environ['ABSOLUTE_APPLI_PATH'] = absoluteAppliPath
+
+  sys.path[:0] = [absoluteAppliPath+'/bin/salome']
+
+  # define folder to store omniorb config (initially in virtual application folder)
+  try:
+    from salomeLauncherUtils import setOmniOrbUserPath
+    setOmniOrbUserPath()
+  except Exception, e:
+    print e
+    sys.exit(1)
+# End of preliminary work
+
+def main(args):
+  # Identify application path then locate configuration files
+  __initialize()
+
+  if args == ['--help']:
+    from salomeRunner import usage
+    usage()
+    sys.exit(0)
+
+  from salomeLauncherUtils import getConfigFileNames
+  configFileNames, args, unexisting = getConfigFileNames(args, checkExistence=True)
+  if len(unexisting) > 0:
+    print "ERROR: unexisting configuration file(s): " + ', '.join(unexisting)
+    sys.exit(1)
+
+  # Create a SalomeRunner which parses configFileNames to initialize environment
+  try:
+    from salomeRunner import SalomeRunner, SalomeRunnerException
+    runner = SalomeRunner(configFileNames)
+
+    # Here set specific variables, if needed
+    # runner.addToPath('mypath')
+    # runner.addToLdLibraryPath('myldlibrarypath')
+    # runner.addToPythonPath('mypythonpath')
+    # runner.setEnviron('myvarname', 'value')
+
+    # Start SALOME, parsing command line arguments
+    runner.go(args)
+    print 'Thank you for using SALOME!'
+
+  except SalomeRunnerException, e:
+    import logging
+    logging.getLogger("salome").error(e)
+    sys.exit(1)
+#
+
+if __name__ == "__main__":
+  args = sys.argv[1:]
+  main(args)
+#

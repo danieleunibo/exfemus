@@ -1,0 +1,23 @@
+#ifndef __BCTYPES_HXX__
+#define __BCTYPES_HXX__
+
+#include "MEDCouplingRefCountObject.hxx"
+#include "MEDCouplingFieldDouble.hxx"
+
+enum BCType {
+  Undefined = -1,
+  Dirichlet = 0,
+  Neumann,
+  Displacement,
+  Force
+};
+
+// struct BCdata {
+//   std::string name;
+//   std::string type;
+//   bool isAnalytic;
+//   std::string equation;
+//   ParaMEDMEM::MEDCouplingFieldDouble * field;
+// };
+
+#endif

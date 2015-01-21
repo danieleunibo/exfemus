@@ -1,0 +1,128 @@
+\hypertarget{class___lib_mesh_problem}{\section{\-\_\-\-Lib\-Mesh\-Problem Class Reference}
+\label{class___lib_mesh_problem}\index{\-\_\-\-Lib\-Mesh\-Problem@{\-\_\-\-Lib\-Mesh\-Problem}}
+}
+
+
+Inheritance diagram for \-\_\-\-Lib\-Mesh\-Problem\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{class___lib_mesh_problem__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for \-\_\-\-Lib\-Mesh\-Problem\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class___lib_mesh_problem__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class___lib_mesh_problem_aa8b45f543865525921a0188cdb40c722}{{\bfseries \-\_\-\-Lib\-Mesh\-Problem} (const char $\ast$pb\-Name, int n\-Comp, M\-P\-I\-\_\-\-Comm comm)}\label{class___lib_mesh_problem_aa8b45f543865525921a0188cdb40c722}
+
+\item 
+\hypertarget{class___lib_mesh_problem_ab9d4af87f97b093870adc785f070a96a}{virtual void {\bfseries terminate} ()}\label{class___lib_mesh_problem_ab9d4af87f97b093870adc785f070a96a}
+
+\item 
+\hypertarget{class___lib_mesh_problem_acc417a3f26197a4abf46b4ea4a2ccdcb}{virtual void {\bfseries set\-Mesh} (const Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-U\-Mesh $\ast$mesh)}\label{class___lib_mesh_problem_acc417a3f26197a4abf46b4ea4a2ccdcb}
+
+\item 
+\hypertarget{class___lib_mesh_problem_aa6a56c7bca6bf8b5bc8a5da7045280aa}{const \\*
+Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-U\-Mesh $\ast$ {\bfseries get\-Mesh} () const }\label{class___lib_mesh_problem_aa6a56c7bca6bf8b5bc8a5da7045280aa}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a4dc21623bffc6471b6e8597e74d0fbaa}{virtual lib\-Mesh\-::boundary\-\_\-id\-\_\-type {\bfseries define\-Boundary} (const Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-U\-Mesh $\ast$bc)}\label{class___lib_mesh_problem_a4dc21623bffc6471b6e8597e74d0fbaa}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a26f77ccf7e7b55b67a1497c43b393629}{virtual void {\bfseries solve} ()}\label{class___lib_mesh_problem_a26f77ccf7e7b55b67a1497c43b393629}
+
+\item 
+\hypertarget{class___lib_mesh_problem_aa0d625e0ce00f1324b001060d1bd37c5}{virtual void {\bfseries set\-Analytic\-Source} (const char $\ast$f)}\label{class___lib_mesh_problem_aa0d625e0ce00f1324b001060d1bd37c5}
+
+\item 
+\hypertarget{class___lib_mesh_problem_aa14caed6e73a8c173454badc3d1fec54}{virtual void {\bfseries set\-Source} (const Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$f)}\label{class___lib_mesh_problem_aa14caed6e73a8c173454badc3d1fec54}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a16072901cecfeb9bbd0b0d08fbfe57f9}{virtual void {\bfseries set\-Average\-Sources} (int n, double val\mbox{[}$\,$\mbox{]})}\label{class___lib_mesh_problem_a16072901cecfeb9bbd0b0d08fbfe57f9}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a946fb7a10e983e72514e3425dad4c3e3}{virtual void {\bfseries set\-Boundary\-Condition\-Type} (int, const char $\ast$type\-B\-C)}\label{class___lib_mesh_problem_a946fb7a10e983e72514e3425dad4c3e3}
+
+\item 
+\hypertarget{class___lib_mesh_problem_adbbdfff37ef4e7b782158e149a34734a}{virtual void {\bfseries set\-Analytic\-Boundary\-Values} (int, const char $\ast$f)}\label{class___lib_mesh_problem_adbbdfff37ef4e7b782158e149a34734a}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a557e861b6fa94257b6709f75326b7b36}{virtual void {\bfseries set\-Field\-Boundary\-Values} (int, const Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$f)}\label{class___lib_mesh_problem_a557e861b6fa94257b6709f75326b7b36}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a40cf9bfb39fd30c9ba333125d5b0f1d1}{virtual \\*
+Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$ {\bfseries get\-Output\-Field} (const char $\ast$v\-Name) const =0}\label{class___lib_mesh_problem_a40cf9bfb39fd30c9ba333125d5b0f1d1}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a3f1ba458781b0786b964d307a1c9052d}{Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$ {\bfseries get\-Boundary\-Values} (const Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-U\-Mesh $\ast$bc) const }\label{class___lib_mesh_problem_a3f1ba458781b0786b964d307a1c9052d}
+
+\item 
+\hypertarget{class___lib_mesh_problem_adabbbfc50e278f967b2f807c3c53efde}{Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$ {\bfseries get\-Values\-On\-Boundary} (int, const char $\ast$) const }\label{class___lib_mesh_problem_adabbbfc50e278f967b2f807c3c53efde}
+
+\item 
+\hypertarget{class___lib_mesh_problem_ae4cf3497851c96cb997aed6dbd6434df}{Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$ {\bfseries get\-Values\-On\-Boundary} (int, std\-::vector$<$ char $\ast$ $>$) const }\label{class___lib_mesh_problem_ae4cf3497851c96cb997aed6dbd6434df}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a230e0d7521a755a4a71227212a8279f0}{Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$ {\bfseries get\-Values\-On\-Boundary\-\_\-nodes} (int, std\-::vector$<$ char $\ast$ $>$) const }\label{class___lib_mesh_problem_a230e0d7521a755a4a71227212a8279f0}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class___lib_mesh_problem_ad18da25656836fdeafa55fcec911cdc4}{virtual void {\bfseries \-\_\-init\-System} ()=0}\label{class___lib_mesh_problem_ad18da25656836fdeafa55fcec911cdc4}
+
+\item 
+\hypertarget{class___lib_mesh_problem_af4073a757108aa59b63182af50062e0b}{lib\-Mesh\-::\-System $\ast$ {\bfseries \-\_\-get\-Var\-Ids} (std\-::vector$<$ char $\ast$ $>$ name, std\-::vector$<$ int $>$ \&) const }\label{class___lib_mesh_problem_af4073a757108aa59b63182af50062e0b}
+
+\item 
+\hypertarget{class___lib_mesh_problem_aef5edc837a66d52055730d089d1a4689}{lib\-Mesh\-::\-System $\ast$ {\bfseries \-\_\-get\-Var\-Ids} (const char $\ast$name, std\-::vector$<$ int $>$ \&) const }\label{class___lib_mesh_problem_aef5edc837a66d52055730d089d1a4689}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a24984c147004e33d7a00e9fe09d754d2}{Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-Field\-Double $\ast$ {\bfseries \-\_\-get\-Output\-Field} (const char $\ast$v\-Name, Para\-M\-E\-D\-M\-E\-M\-::\-Type\-Of\-Field) const }\label{class___lib_mesh_problem_a24984c147004e33d7a00e9fe09d754d2}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class___lib_mesh_problem_ab45902984281a4a6460443ae5ea80737}{M\-P\-I\-\_\-\-Comm {\bfseries \-\_\-comm}}\label{class___lib_mesh_problem_ab45902984281a4a6460443ae5ea80737}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a4a12c20724ed9561bdaabdd1205548a1}{lib\-Mesh\-::\-Lib\-Mesh\-Init $\ast$ {\bfseries \-\_\-init\-Lib\-Mesh}}\label{class___lib_mesh_problem_a4a12c20724ed9561bdaabdd1205548a1}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a6ea27959c2c72628bef4195991451948}{std\-::string {\bfseries problem\-Name}}\label{class___lib_mesh_problem_a6ea27959c2c72628bef4195991451948}
+
+\item 
+\hypertarget{class___lib_mesh_problem_ac48b158e95da1ecd9825ceb1200c566f}{const \\*
+Para\-M\-E\-D\-M\-E\-M\-::\-M\-E\-D\-Coupling\-U\-Mesh $\ast$ {\bfseries med\-\_\-mesh}}\label{class___lib_mesh_problem_ac48b158e95da1ecd9825ceb1200c566f}
+
+\item 
+\hypertarget{class___lib_mesh_problem_ac094f4bbfb23d0a923fca0bbc6819a7c}{\hyperlink{class_parallel_mesh_extended}{Parallel\-Mesh\-Extended} $\ast$ {\bfseries mesh}}\label{class___lib_mesh_problem_ac094f4bbfb23d0a923fca0bbc6819a7c}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a6ef56bdc17332a06789f3e7ea14bd8f6}{\hyperlink{class_equation_systems_extended}{Equation\-Systems\-Extended} $\ast$ {\bfseries equation\-\_\-systems}}\label{class___lib_mesh_problem_a6ef56bdc17332a06789f3e7ea14bd8f6}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a40f55d4d5645515916e3825d742db0ca}{int {\bfseries \-\_\-n\-Comp}}\label{class___lib_mesh_problem_a40f55d4d5645515916e3825d742db0ca}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a00366edec65284af72f89efbe1de02af}{std\-::map$<$ std\-::string, B\-C\-Type $>$ {\bfseries \-\_\-\-B\-C\-Types}}\label{class___lib_mesh_problem_a00366edec65284af72f89efbe1de02af}
+
+\item 
+\hypertarget{class___lib_mesh_problem_a652d4a40f5990654d7ad6cf92977a52c}{std\-::vector$<$ void($\ast$)(lib\-Mesh\-::\-Equation\-Systems \&)$>$ {\bfseries \-\_\-post\-\_\-processing\-\_\-functions}}\label{class___lib_mesh_problem_a652d4a40f5990654d7ad6cf92977a52c}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/homesd/msandro/software/femus/contrib/\-Libmesh\-\_\-cpp/libmesh\-\_\-problem/\-\_\-\-Lib\-Mesh\-Problem.\-h\end{DoxyCompactItemize}

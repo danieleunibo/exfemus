@@ -1,0 +1,34 @@
+
+#ifndef _MATHEMATICS_IDL_
+#define _MATHEMATICS_IDL_
+
+#include "DSC_Engines.idl"
+#include "SALOME_Exception.idl"
+#include "SALOME_PACOExtension.idl"
+#include "SALOME_Component.idl"
+#include "SALOME_Comm.idl"
+#include "SALOME_Parametric.idl"
+
+
+
+module MATHEMATICS_ORB
+{
+typedef sequence<string> stringvec;
+typedef sequence<double> dblevec;
+typedef sequence<long> intvec;
+typedef Engines::dataref dataref;
+
+
+  interface MATH_Gen: Engines::EngineComponent
+  {
+    double sum(in dblevec tab) raises (SALOME::SALOME_Exception);
+    double squareroot(in double x) raises (SALOME::SALOME_Exception);
+    double plus(in double x,in double y) raises (SALOME::SALOME_Exception);
+    double minus(in double x,in double y) raises (SALOME::SALOME_Exception);
+    double times(in double x,in double y) raises (SALOME::SALOME_Exception);
+    double sinx(in double x) raises (SALOME::SALOME_Exception);
+  };
+
+};
+
+#endif

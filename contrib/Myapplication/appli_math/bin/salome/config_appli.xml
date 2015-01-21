@@ -1,0 +1,19 @@
+<application>
+  <prerequisites path="/homesd/msandro/software/salome/env_products.sh"/>
+  <modules>
+    <module name="PARAVIS" gui="yes" path="/homesd/msandro/software/salome/PARAVIS_7.3.0"/>
+    <module name="KERNEL" gui="no" path="/homesd/msandro/software/salome/KERNEL_7.3.0"/>
+    <module name="YACS" gui="yes" path="/homesd/msandro/software/salome/YACS_7.3.0"/>
+    <module name="HEXABLOCK" gui="yes" path="/homesd/msandro/software/salome/HEXABLOCK_7.3.0"/>
+    <module name="PYHELLO" gui="yes" path="/homesd/msandro/software/salome/PYHELLO_7.3.0"/>
+    <module name="SMESH" gui="yes" path="/homesd/msandro/software/salome/SMESH_7.3.0"/>
+    <module name="HEXABLOCKPLUGIN" gui="no" path="/homesd/msandro/software/salome/HEXABLOCKPLUGIN_7.3.0"/>
+    <module name="LIGHT" gui="yes" path="/homesd/msandro/software/salome/LIGHT_7.3.0"/>
+    <module name="MED" gui="yes" path="/homesd/msandro/software/salome/MED_7.3.0"/>
+    <module name="HELLO" gui="yes" path="/homesd/msandro/software/salome/HELLO_7.3.0"/>
+    <module name="GEOM" gui="yes" path="/homesd/msandro/software/salome/GEOM_7.3.0"/>
+    <module name="GUI" gui="no" path="/homesd/msandro/software/salome/GUI_7.3.0"/>
+      <module name="MATH" gui="no" path="/homesd/msandro/software/salome/MATHEMATICS"/>
+  </modules>
+  <samples path=""/>
+</application>

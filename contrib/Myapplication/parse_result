@@ -1,0 +1,50 @@
+Function :  MATH
+	->  1  :  MATH
+Function :  ~MATH
+	->  1  :  ~MATH
+Function :  double sum(const std::vector<double>& tab
+	->  1  :  double sum
+	->  2  :  const std::vector<double>& tab
+Function :  double squareroot(double x
+	->  1  :  double squareroot
+	->  2  :  double x
+Function :  double plus(double x, double y
+	->  1  :  double plus
+	->  2  :  double x
+	->  3  :  double y
+Function :  double minus(double x, double y
+	->  1  :  double minus
+	->  2  :  double x
+	->  3  :  double y
+Function :  double times(double x, double y
+	->  1  :  double times
+	->  2  :  double x
+	->  3  :  double y
+Function :  double sinx(double x
+	->  1  :  double sinx
+	->  2  :  double x
+Function :  MATH
+	->  1  :  MATH
+Function :  ~MATH
+	->  1  :  ~MATH
+Function :  double sum(const std::vector<double>& tab
+	->  1  :  double sum
+	->  2  :  const std::vector<double>& tab
+Function :  double squareroot(double x
+	->  1  :  double squareroot
+	->  2  :  double x
+Function :  double plus(double x, double y
+	->  1  :  double plus
+	->  2  :  double x
+	->  3  :  double y
+Function :  double minus(double x, double y
+	->  1  :  double minus
+	->  2  :  double x
+	->  3  :  double y
+Function :  double times(double x, double y
+	->  1  :  double times
+	->  2  :  double x
+	->  3  :  double y
+Function :  double sinx(double x
+	->  1  :  double sinx
+	->  2  :  double x

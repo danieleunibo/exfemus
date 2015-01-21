@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+
+<!-- XML component catalog -->
+<begin-catalog>
+
+<!-- Path prefix information -->
+
+<path-prefix-list>
+</path-prefix-list>
+
+<!-- Commonly used types  -->
+<type-list>
+  <objref name="pyobj" id="python:obj:1.0"/>
+  <objref name="file" id="file"/>
+</type-list>
+
+<!-- Component list -->
+<component-list>
+
+  <component>
+        <!-- Component identification -->
+        <component-name>MATH</component-name>
+        <component-username>MATH</component-username>
+        <component-type>Data</component-type>
+        <component-author>EDF-RD</component-author>
+        <component-version>1.0</component-version>
+        <component-comment></component-comment>
+        <component-multistudy>0</component-multistudy>
+        <component-impltype>SO</component-impltype>
+        <component-implname></component-implname>
+        <component-interface-list>
+            <component-interface-name>MATH</component-interface-name>
+            <component-interface-comment></component-interface-comment>
+            <component-service-list>
+                <component-service>
+                    <!-- service-identification -->
+                    <service-name>sum</service-name>
+                    <service-author>EDF-RD</service-author>
+                    <service-version>1.0</service-version>
+                    <service-comment></service-comment>
+                    <service-by-default>0</service-by-default>
+                    <!-- service-connexion -->
+                    <inParameter-list>
+                        <inParameter>
+                          <inParameter-name>tab</inParameter-name>
+                          <inParameter-type>dblevec</inParameter-type>
+                       </inParameter>
+                    </inParameter-list>
+                    <outParameter-list>
+                        <outParameter>
+                          <outParameter-name>return</outParameter-name>
+                          <outParameter-type>double</outParameter-type>
+                       </outParameter>
+                    </outParameter-list>
+                    <DataStream-list>
+
+                    </DataStream-list>
+                </component-service>
+                <component-service>
+                    <!-- service-identification -->
+                    <service-name>squareroot</service-name>
+                    <service-author>EDF-RD</service-author>
+                    <service-version>1.0</service-version>
+                    <service-comment></service-comment>
+                    <service-by-default>0</service-by-default>
+                    <!-- service-connexion -->
+                    <inParameter-list>
+                        <inParameter>
+                          <inParameter-name>x</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                    </inParameter-list>
+                    <outParameter-list>
+                        <outParameter>
+                          <outParameter-name>return</outParameter-name>
+                          <outParameter-type>double</outParameter-type>
+                       </outParameter>
+                    </outParameter-list>
+                    <DataStream-list>
+
+                    </DataStream-list>
+                </component-service>
+                <component-service>
+                    <!-- service-identification -->
+                    <service-name>plus</service-name>
+                    <service-author>EDF-RD</service-author>
+                    <service-version>1.0</service-version>
+                    <service-comment></service-comment>
+                    <service-by-default>0</service-by-default>
+                    <!-- service-connexion -->
+                    <inParameter-list>
+                        <inParameter>
+                          <inParameter-name>x</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                        <inParameter>
+                          <inParameter-name>y</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                    </inParameter-list>
+                    <outParameter-list>
+                        <outParameter>
+                          <outParameter-name>return</outParameter-name>
+                          <outParameter-type>double</outParameter-type>
+                       </outParameter>
+                    </outParameter-list>
+                    <DataStream-list>
+
+                    </DataStream-list>
+                </component-service>
+                <component-service>
+                    <!-- service-identification -->
+                    <service-name>minus</service-name>
+                    <service-author>EDF-RD</service-author>
+                    <service-version>1.0</service-version>
+                    <service-comment></service-comment>
+                    <service-by-default>0</service-by-default>
+                    <!-- service-connexion -->
+                    <inParameter-list>
+                        <inParameter>
+                          <inParameter-name>x</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                        <inParameter>
+                          <inParameter-name>y</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                    </inParameter-list>
+                    <outParameter-list>
+                        <outParameter>
+                          <outParameter-name>return</outParameter-name>
+                          <outParameter-type>double</outParameter-type>
+                       </outParameter>
+                    </outParameter-list>
+                    <DataStream-list>
+
+                    </DataStream-list>
+                </component-service>
+                <component-service>
+                    <!-- service-identification -->
+                    <service-name>times</service-name>
+                    <service-author>EDF-RD</service-author>
+                    <service-version>1.0</service-version>
+                    <service-comment></service-comment>
+                    <service-by-default>0</service-by-default>
+                    <!-- service-connexion -->
+                    <inParameter-list>
+                        <inParameter>
+                          <inParameter-name>x</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                        <inParameter>
+                          <inParameter-name>y</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                    </inParameter-list>
+                    <outParameter-list>
+                        <outParameter>
+                          <outParameter-name>return</outParameter-name>
+                          <outParameter-type>double</outParameter-type>
+                       </outParameter>
+                    </outParameter-list>
+                    <DataStream-list>
+
+                    </DataStream-list>
+                </component-service>
+                <component-service>
+                    <!-- service-identification -->
+                    <service-name>sinx</service-name>
+                    <service-author>EDF-RD</service-author>
+                    <service-version>1.0</service-version>
+                    <service-comment></service-comment>
+                    <service-by-default>0</service-by-default>
+                    <!-- service-connexion -->
+                    <inParameter-list>
+                        <inParameter>
+                          <inParameter-name>x</inParameter-name>
+                          <inParameter-type>double</inParameter-type>
+                       </inParameter>
+                    </inParameter-list>
+                    <outParameter-list>
+                        <outParameter>
+                          <outParameter-name>return</outParameter-name>
+                          <outParameter-type>double</outParameter-type>
+                       </outParameter>
+                    </outParameter-list>
+                    <DataStream-list>
+
+                    </DataStream-list>
+                </component-service>
+            </component-service-list>
+        </component-interface-list>
+  </component>
+</component-list>
+</begin-catalog>

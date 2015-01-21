@@ -1,0 +1,121 @@
+// Copyright (C) 2007-2013  CEA/DEN, EDF R&D, OPEN CASCADE
+//
+// Copyright (C) 2003-2007  OPEN CASCADE, EADS/CCR, LIP6, CEA/DEN,
+// CEDRAT, EDF R&D, LEG, PRINCIPIA R&D, BUREAU VERITAS
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+//
+// See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+//
+//  File   : SALOME_Session.idl
+//  Author : Paul RASCLE, EDF
+
+#include "SALOME_Component.idl"
+
+/*! \file SALOME_Session.idl \brief file that contains interface of the session
+ */
+
+module SALOME
+{
+/*! \brief State of the session
+
+   This enumeration contains values defining the state of the session
+
+*/
+  enum SessionState {asleep,   /*!< Session is inactive */
+                     running,  /*!< Session is running */
+                     shutdown  /*!< Session is shutting down */
+  } ;
+
+/*! \brief %Session State and Statistics
+
+    This struct contains a field list with general information about the session
+*/
+
+  struct StatSession
+  {
+/*! \brief State of the session
+
+   It can be:
+        -# asleep  : no running study
+        -# running : one or more running studies
+*/
+    SessionState state ;
+    //! Number of running studies
+    short        runningStudies ;
+    //! It is True if GUI is active in the session
+    boolean      activeGUI ;
+  } ;
+
+/*! \brief Interface of the session
+
+    The %session Server launches and stops GUI (Graphical User Interface).
+    The %session can be active without GUI (It can contain one or more running studies)
+*/
+
+  interface Session
+  {
+//!  This exception is raised when trying to stop the %session with active GUI
+    exception GUIActive {} ;
+//!  This exception is raised when trying to stop the %session with a number of running studies.
+    exception RunningStudies {} ;
+
+//!  Launches GUI in the session
+    void GetInterface();
+
+//!  Returns a standalone component
+    Engines::EngineComponent GetComponent(in string theLibraryName);
+
+//!  Stops the %Session (It must be idle)
+    void StopSession() raises(GUIActive, RunningStudies) ;
+
+//!  Gets Session State
+    StatSession GetStatSession() ;
+
+//!  Shutdowns Session server
+    void Shutdown();
+
+//!  Determines whether the server has already been loaded or not.
+    void ping();
+//!  Returns the PID of the server
+    long getPID();
+//!  Returns host name
+    string getHostname();
+//!  Get Active study ID
+    long GetActiveStudyId();
+//!  Restores a state of the study at theSavePoint
+    boolean restoreVisualState(in long theSavePoint);
+
+ //! Send a message to the session GUI desktop that will emit a qt signal
+/*!
+    This method can be used to send a message to the GUI from the standalone
+    container.
+    Caution: this method can block the Session and the calling container
+    if it is called when container processes some request from the GUI
+    (mutual lock takes place).
+    In such a case it is recommended to use oneway method.
+*/
+    void emitMessage(in string theMessage);
+
+    //! same as emitMessage but in a non blocking way
+/*!
+    Emit a qt signal from the session GUI desktop window.
+    This method can be used to send a message to the GUI from the standalone
+    container.
+    This method never blocks the Session and the calling container.
+*/
+    oneway void emitMessageOneWay(in string theMessage);
+  } ;
+} ;

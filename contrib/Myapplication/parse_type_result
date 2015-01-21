@@ -1,0 +1,15 @@
+Function;double;sum
+const std::vector<double>&;tab
+Function;double;squareroot
+double;x
+Function;double;plus
+double;x
+double;y
+Function;double;minus
+double;x
+double;y
+Function;double;times
+double;x
+double;y
+Function;double;sinx
+double;x

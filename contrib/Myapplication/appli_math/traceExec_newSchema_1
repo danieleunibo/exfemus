@@ -1,0 +1,33 @@
+1.7123 DefaultContainer Not_placed_yet plus0 state:TOLOAD
+1.71237 DefaultContainer Not_placed_yet plus0 load
+1.7151 DefaultContainer /Containers/pool/FactoryServer plus0 initService
+1.71521 DefaultContainer /Containers/pool/FactoryServer sinx1 state:TOLOAD
+1.71528 DefaultContainer /Containers/pool/FactoryServer sinx1 load
+1.71618 DefaultContainer /Containers/pool/FactoryServer sinx1 initService
+1.71625 DefaultContainer /Containers/pool/FactoryServer plus0 connectService
+1.71639 DefaultContainer /Containers/pool/FactoryServer plus0 state:TOACTIVATE
+1.71646 DefaultContainer /Containers/pool/FactoryServer sinx1 connectService
+1.71658 DefaultContainer /Containers/pool/FactoryServer sinx1 state:TOACTIVATE
+1.71668 DefaultContainer /Containers/pool/FactoryServer plus0 launch
+1.71686 DefaultContainer /Containers/pool/FactoryServer sinx1 launch
+1.71696 DefaultContainer /Containers/pool/FactoryServer plus0 state:ACTIVATED
+1.71706 DefaultContainer /Containers/pool/FactoryServer plus0 start execution
+1.7176 DefaultContainer /Containers/pool/FactoryServer sinx1 state:ACTIVATED
+1.71771 DefaultContainer /Containers/pool/FactoryServer sinx1 start execution
+1.71787 DefaultContainer /Containers/pool/FactoryServer plus0 end execution OK
+1.71797 DefaultContainer /Containers/pool/FactoryServer plus0 disconnectService
+1.71814 DefaultContainer /Containers/pool/FactoryServer plus0 state:DONE
+1.71822 DefaultContainer /Containers/pool/FactoryServer sinx1 end execution OK
+1.71832 DefaultContainer /Containers/pool/FactoryServer sinx1 disconnectService
+1.71849 DefaultContainer /Containers/pool/FactoryServer sinx1 state:DONE
+1.71869 DefaultContainer /Containers/pool/FactoryServer plus2 state:TOLOAD
+1.71878 DefaultContainer /Containers/pool/FactoryServer plus2 load
+1.71985 DefaultContainer /Containers/pool/FactoryServer plus2 initService
+1.71994 DefaultContainer /Containers/pool/FactoryServer plus2 connectService
+1.72011 DefaultContainer /Containers/pool/FactoryServer plus2 state:TOACTIVATE
+1.72018 DefaultContainer /Containers/pool/FactoryServer plus2 launch
+1.72038 DefaultContainer /Containers/pool/FactoryServer plus2 state:ACTIVATED
+1.72046 DefaultContainer /Containers/pool/FactoryServer plus2 start execution
+1.72101 DefaultContainer /Containers/pool/FactoryServer plus2 end execution OK
+1.72108 DefaultContainer /Containers/pool/FactoryServer plus2 disconnectService
+1.72121 DefaultContainer /Containers/pool/FactoryServer plus2 state:DONE

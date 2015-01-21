@@ -1,0 +1,19 @@
+<document>
+  <section name="launch">
+    <!-- SALOME launching parameters -->
+    <parameter name="gui"        value="yes"/>
+    <parameter name="splash"     value="yes"/>
+    <parameter name="file"       value="no"/>
+    <parameter name="key"        value="no"/>
+    <parameter name="interp"     value="no"/>
+    <parameter name="logger"     value="no"/>
+    <parameter name="xterm"      value="no"/>
+    <parameter name="portkill"   value="no"/>
+    <parameter name="killall"    value="no"/>
+    <parameter name="noexcepthandler"  value="no"/>
+    <parameter name="modules"    value="LIBBATCH,GEOM,SMESH,MED,YACS,HELLO,PYHELLO,YACSGEN,PARAVIS,MATHEMATICS,LIBMESH"/>
+    <parameter name="pyModules"  value=""/>
+    <parameter name="embedded"   value="SalomeAppEngine,study,cppContainer,registry,moduleCatalog"/>
+    <parameter name="standalone" value="pyContainer"/>
+  </section>
+</document>

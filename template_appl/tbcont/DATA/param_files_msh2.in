@@ -1,0 +1,64 @@
+ # mesh**********************************                                        
+ # we recognize the file format from the extension: .neu=gambit, .med=salome                                                                                     
+ GAMBIT_EXT     .neu                                                             
+ SALOME_EXT     .med                                                             
+ EXT_H5         .h5                                                              
+ EXT_XDMF       .xmf                                                             
+ EXT_IN         .in                                                              
+ # F_MESH_READ simple_quad9_1.med
+ F_MESH_READ simple_hex27_2.med
+ # F_MESH_READ   elsy.neu
+ # F_MESH_READ pres_box_2matbc.neu
+ # gencase*****************************                                          
+ CONNLIN      _conn_lin1                                                          
+ INMESH       mesh.msh2.h5                                                            
+ F_MATRIX     msh2.Matrix                                                            
+ F_PROL       msh2.Prol                                                                
+ F_REST       msh2.Rest                                                               
+ EL_LIBMESH   el_libmesh                                                         
+ ND_LIBMESH   nd_libmesh  
+ 
+                                                                                 
+ # case*************                                                             
+ BASEPARAM     parameters.in                                                     
+ BASEPARUTILS  parameters.in                                                     
+ BASEMESH      mesh.msh2                                                              
+ MULTIMESH     multimesh.msh2                                                         
+ BASESOL       sol.msh2                                                               
+ BASECASE      case.msh2                                                              
+ BASETIME      time.msh2   
+ BASEBC        bc_case.msh2.h5
+ MESHNUMBER    2
+ TYPE          domain
+   
+ INPUT_DIR     RESU/                                                             
+ OUTPUT_DIR    RESU/                                                             
+ FEM_DIR       fem/                                                              
+ CONFIG_DIR    DATA/                                                             
+ CONTRIB_DIR   contrib/                                                          
+ FEMUS_DIR     FEMUS_DIR                                                         
+ AUX_XDMF      Xdmf.dtd                                                          
+ APPL_DIR      USER_APPL/                                                        
+ MESH_DIR      MESH/                                                             
+                                                                                 
+ # external ibc****************************                                      
+ IBC           case                                                             
+                                                                                 
+ # **************************                                                    
+ # file names for gaussian points and derivatives                                
+ # now they are composed                                                         
+ F_SHAPE       shape                                                             
+ #  F_GAUSS1D_1   fem/shape1D_3.2.in                                             
+ #  F_GAUSS1D_2   fem/shape1D_3.3.in                                             
+ #  F_GAUSS2D_1   fem/shape2D_9.4.in                                             
+ #  F_GAUSS2D_2   fem/shape2D_9.9.in                                             
+ #  F_GAUSS3D_1   fem/shape3D_27.8.in                                            
+ #  F_GAUSS3D_2   fem/shape3D_27.27.in                                           
+                                                                                 
+                                                                                 
+ # Petsc*******************************                                          
+ PETSC_FEMUS_LOG  petsc_femus.log                                                
+                                                                                 
+ # //here, also the fields of the hdf5 files should be included                  
+                                                                                 
+                                                                                 

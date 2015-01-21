@@ -1,0 +1,82 @@
+ # ------------------------------------------------------- 
+ / # Numerical Parameters                                  
+ # ------------------------------------------------------  
+ #	Time_param                                       
+ dt              0.1
+ itime           0
+ nsteps          10
+ restart         0
+ restartime      0
+ restart_lev     0
+ # Print_param                 
+ printstep       1
+
+ #	Mesh_gen                    
+ libmesh_gen	0
+  mesh_refine	1     
+  moving_mesh   0
+  mgops_gen	1	      
+  ibc_gen	0	             
+ #	Num_param              
+  nolevels      1
+  ndigits       4 
+ #	Param                      
+  pi	3.14159265359	          
+ #	Grid_param                 
+  nintervx   8
+  nintervy   8
+  nintervz   12
+ # ------------- -------------------------------------   
+ / # end Numerical Parameters                            
+ # --------------------------------------------------    
+                                                        
+                                                        
+ # --------------------------------------------------
+ // # Physical Properties
+ # -------------------------------------------------
+ #	ReferenceValue
+ Uref 1
+ Lref 1
+ Tref 1
+ #	FluidProperties
+ #	Monophase
+ 
+ # rho mu k change with temperature
+ 
+ rho0     10640.63
+ mu0      0.002639
+ kappa0   16.5857
+ cp0      147.3
+ komp0    1e-20
+#	SurfaceTension 
+ sigma  0.
+#	Source 
+# nominal value  1.176156e+08  
+  qheat  1.176156e+08  
+#  qheat  1.176156e+06
+  qheat_sg   10.  
+ qs 0 
+#	 solid properties
+ rhos  1000
+ Es    183000
+ nis   0.2
+# gravity 
+ dirgx  0
+ dirgy  0
+ dirgz  -1
+# reactordaniele
+zmin 0.0475
+zmax 0.1425
+# stop the pump on the secondary loop 1 not blocked 0 blocked
+#  core outlet T_max=768 T_min=740  T_av=757
+#  v_i=-0.683762  dp=   6.883183  dp=  6.882253  dp_max=88923 v_max=1.55
+#  core inlet T=673.15
+#  loop dp=72701 pump_block 2.75 T2_in=749.9 v_in=1.034
+
+#pump_block 4.46368
+
+pump_block 0.
+
+# --------------------------------------------------
+// # /Physical Properties 
+# --------------------------------------------------

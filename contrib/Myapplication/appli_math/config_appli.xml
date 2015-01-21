@@ -1,0 +1,11 @@
+
+<application>
+<prerequisites path="/homesd/msandro/software/salome/env_products.sh"/>
+
+<modules>
+  <module name="KERNEL" path="/homesd/msandro/software/salome/KERNEL_7.3.0"/>
+  <module name="YACS" path="/homesd/msandro/software/salome/YACS_7.3.0"/>
+  <module name="GUI" path="/homesd/msandro/software/salome/YACS_7.3.0"/>
+  <module name="MATHEMATICS" path="/homesd/msandro/software/salome/MATHEMATICS"/>
+</modules>
+</application>

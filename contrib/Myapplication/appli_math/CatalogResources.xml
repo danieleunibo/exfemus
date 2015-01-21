@@ -1,0 +1,4 @@
+<!DOCTYPE ResourcesCatalog>
+<resources>
+    <machine hostname="pool" protocol="ssh" mode="interactive" />
+</resources>
