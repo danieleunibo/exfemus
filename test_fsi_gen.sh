@@ -111,6 +111,7 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   mkdir RESU
   make gencase
   mpiexec -np 1 ../gencase/gencase-opt
+  make all_clean
   make
   mpiexec -np 1 fsi_1-opt
   return;
