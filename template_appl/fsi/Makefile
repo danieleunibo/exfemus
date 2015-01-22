@@ -33,15 +33,15 @@ LIBMESH_LIB=$(LIBMESH_PATH)lib64/
 # ----------------------------------------------------------
 # define any directories containing header files other than /usr/include
 CONTRIB_HDF5_INCPATH =  $(HDF5_PATH)/include
-FEMUS_CONTRIB        =  $(FEMUS_DIR)contrib
+FEMUS_CONTRIB        =  $(FEMUS_DIR)/contrib
 MED_ROOT_DIR         =  $(MED_PATH)
 med_ROOT_DIR         =  $(med_PATH)
 
 INCLUDES =  -I./
 INCLUDES += -Isrc/
-INCLUDES += -I$(FEMUS_DIR)USER_APPL/$(FM_MYAPP)/DATA/
-INCLUDES += -I$(FEMUS_DIR)include/
-INCLUDES += -I$(FEMUS_DIR)USER_APPL/$(FM_MYAPP)/SRC/
+INCLUDES += -I$(FEMUS_DIR)/USER_APPL/$(FM_MYAPP)/DATA/
+INCLUDES += -I$(FEMUS_DIR)/include/
+INCLUDES += -I$(FEMUS_DIR)/USER_APPL/$(FM_MYAPP)/SRC/
 INCLUDES += -I$(FEMUS_CONTRIB)/matrix/
 INCLUDES += -I$(FEMUS_CONTRIB)/parallel/
 INCLUDES += -I$(FEMUS_CONTRIB)/Libmesh_cpp/
@@ -54,8 +54,8 @@ INCLUDES += -I${med_ROOT_DIR}/include/
 # the files below are set in order to know when it is necessary to recompile.
 # If the INCLUDES_SRC are changed than the SRC files will be recompiled,
 # if the INCLUDES_CONTRIB are changed than the SRC_CONTRIB files will be recompiled,
-INCLUDES_SRC  =  $(wildcard $(FEMUS_DIR)USER_APPL/$(FM_MYAPP)/DATA/*.h)
-INCLUDES_SRC +=  $(wildcard $(FEMUS_DIR)include/*.h)
+INCLUDES_SRC  =  $(wildcard $(FEMUS_DIR)/USER_APPL/$(FM_MYAPP)/DATA/*.h)
+INCLUDES_SRC +=  $(wildcard $(FEMUS_DIR)/include/*.h)
 INCLUDES_CONTRIB  =  $(wildcard $(FEMUS_CONTRIB)/matrix/*.h)
 INCLUDES_CONTRIB +=  $(wildcard $(FEMUS_CONTRIB)/parallel/*.h)
 
