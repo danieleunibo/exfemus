@@ -38,7 +38,9 @@ echo $PWD
 # # =============== CHECKING APPLICATION =======================
 # # ============================================================
 # 
-APP="fsi_1"
+NEWNAME=`ls -l ./USER_APPL |grep fsi |wc -l`
+((NEWNAME += 1))
+APP="fsi_"NEWNAME
 APP_NAME=${APP/%_*/""}
 APP_VER=${APP/#*_/""}
 echo  "APP_NAME" $APP_NAME "APP_VER" $APP_VER
@@ -115,8 +117,5 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   make all_clean
   make src_clean
   make
-  mpiexec -np 1 ./fsi_1-opt
-  cd ..	
-  NEWNAME=`ls -l  |grep fsi |wc -l`
-  mv -r ./fsi_1 ./test_$(NEWNAME)/
+  mpiexec -np 1 ./$APP-opt
   return;
