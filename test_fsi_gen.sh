@@ -117,5 +117,7 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   make all_clean
   make src_clean
   make
-  mpiexec -np 1 ./$APP-opt
+  mpiexec -np 1 ./$FM_MYAPP-opt
   return;
+
+
