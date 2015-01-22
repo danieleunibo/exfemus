@@ -39,7 +39,7 @@ echo $PWD
 # # ============================================================
 # 
 NEWNAME=`ls -l ./USER_APPL |grep fsi |wc -l`
-((NEWNAME += 1))
+(($(NEWNAME) += 1))
 APP="fsi_"NEWNAME
 APP_NAME=${APP/%_*/""}
 APP_VER=${APP/#*_/""}
