@@ -77,8 +77,7 @@ fi
 # ============================================================
 # =================  PATH for LIBRARIES  =====================
 # ============================================================
-export FEMUS_DIR=$PWD/../
-echo $FEMUS_DIR
+export FEMUS_DIR=$PWD
 # -----------  LIBMESH ---------------
 export LIBMESH_PATH=$INSTALLATION_DIR/$LIBMESH_NAME/
 # -----------  PETSC   ---------------
