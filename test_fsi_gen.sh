@@ -115,7 +115,7 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   make all_clean
   make src_clean
   make
-  mpiexec -np 1 ./fsi_1-opt
+  mpiexec -np 1 ./fsi_1-opt 2>&1 >/dev/null
   cd ..	
   NEWNAME=`ls -l  |grep fsi |wc -l`
   mv -r ./fsi_1 ./test_$(NEWNAME)/
