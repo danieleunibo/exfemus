@@ -32,8 +32,8 @@ LIBMESH_LIB=$(LIBMESH_PATH)lib64/
 # -------------------- INCLUDE -----------------------------
 # ----------------------------------------------------------
 # define any directories containing header files other than /usr/include
-CONTRIB_HDF5_INCPATH =  $(HDF5_PATH)/include
-FEMUS_CONTRIB        =  $(FEMUS_DIR)/contrib
+CONTRIB_HDF5_INCPATH =  $(HDF5_PATH)/include/
+FEMUS_CONTRIB        =  $(FEMUS_DIR)/contrib/
 MED_ROOT_DIR         =  $(MED_PATH)
 med_ROOT_DIR         =  $(med_PATH)
 
@@ -84,7 +84,7 @@ LIBS =  -lm  -lhdf5 -lpetsc -lmed -lmedloader -lmedcoupling \
 # the application and of FEMUS (SRC) and the sources of the
 # contrib (SRC_CONTRIB). They are recompiled in different cases.
 SRC := $(wildcard $(FEMUS_DIR)USER_APPL/$(FM_MYAPP)/SRC/*.C)
-SRC += $(wildcard $(FEMUS_DIR)src/*.C)
+SRC += $(wildcard $(FEMUS_DIR)/src/*.C)
 SRC_CONTRIB := $(wildcard $(FEMUS_CONTRIB)/matrix/*.C)
 SRC_CONTRIB += $(wildcard $(FEMUS_CONTRIB)/parallel/*.C)
 # SRC_CONTRIB +=  $(wildcard $(FEMUS_CONTRIB)/Libmesh_cpp/*.C)

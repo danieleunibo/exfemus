@@ -1,4 +1,4 @@
-export INSTALLATION_DIR=/home4/software_jenk 
+export INSTALLATION_DIR=/home4/software_jenk/
 export OPENMPI_NAME=openmpi-1.8.3 
 export PETSC_NAME=petsc-3.5.2 
 export HDF5_NAME=salome_7.4/hdf5-1.8.10 
@@ -77,7 +77,7 @@ fi
 # ============================================================
 # =================  PATH for LIBRARIES  =====================
 # ============================================================
-export FEMUS_DIR=$PWD
+export FEMUS_DIR=$PWD/
 # -----------  LIBMESH ---------------
 export LIBMESH_PATH=$INSTALLATION_DIR/$LIBMESH_NAME/
 # -----------  PETSC   ---------------
@@ -115,5 +115,5 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   make all_clean
   make src_clean
   make
-  mpiexec -np 1 fsi_1-opt
+  mpiexec -np 1 ./fsi_1-opt
   return;
