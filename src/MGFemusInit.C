@@ -143,7 +143,7 @@ MGFemusInit::~MGFemusInit()   // ========================
     abort();
   }
 #endif
-#if defined(HAVE_PETSC)
+#if defined(HAVE_PETSCM)
   if (_is_initialized_petsc)  PetscFinalize();
 #endif
 #if defined(HAVE_MPI)
