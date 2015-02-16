@@ -105,7 +105,7 @@ export LD_LIBRARY_PATH=$PETSC_DIR/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$HDF5_PATH/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$med_PATH/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
-################################################ 
+################################################
 
 
   cp -r template_appl/$APP_NAME/   USER_APPL/$APP
