@@ -7,7 +7,7 @@ export SALOME_NAME=salome_7.4
 export med3_NAME=med-3.0.7 
 export MED_NAME=MED_7.4.0
 
-########## Over here there MUST be the definition of       #############
+########## Over here there MUST be the definition of       ############# 
 ########## $INSTALLATION_DIR, given when installing femus; #############
 ########## otherwise, write it on your own                 #############
 #######################################################################
