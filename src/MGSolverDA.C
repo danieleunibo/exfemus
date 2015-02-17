@@ -1730,8 +1730,10 @@ void MGSolDA::init(const int Level) {
   x_oold[Level]->init(n_glob,false, SERIALM);
   disp[Level] = NumericVectorM::build(comm1).release();
   disp[Level]->init(n_glob,false, SERIALM);
-
-
+  nn_eq_disp[Level] = NumericVectorM::build(comm1).release();
+  nn_eq_disp[Level]->init(n_glob,false, SERIALM);
+  nn_eq_x_old[Level] = NumericVectorM::build(comm1).release();
+  nn_eq_x_old[Level]->init(n_glob,false, SERIALM);
 
   if(Level < _NoLevels - 1) {    // Restrictor
     Rst[Level] = SparseMMatrixM::build(comm1).release();

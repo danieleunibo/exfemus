@@ -66,7 +66,8 @@ public:
   std::vector<NumericVectorM *> x_old; ///< old solution x
   std::vector<NumericVectorM *> x_oold; ///< oold solution x 
   std::vector<NumericVectorM *> disp; ///< displacement solution x
-
+  std::vector<NumericVectorM *> nn_eq_disp; ///< displacement solution x
+  std::vector<NumericVectorM *> nn_eq_x_old; ///< displacement solution x
    ///< 
   ///@}
   // ---------------------------------------

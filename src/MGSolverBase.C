@@ -59,6 +59,8 @@ MGSolBase::MGSolBase(MGEquationsSystem& e_map_in, // equation map
   A.resize(_NoLevels);      x.resize(_NoLevels);     // matrix vect sol
   x_old.resize(_NoLevels);  x_oold.resize(_NoLevels);// old solution
    disp.resize(_NoLevels);// displacement for mesh
+   nn_eq_disp.resize(_NoLevels); ///< displacement solution x
+   nn_eq_x_old.resize(_NoLevels); ///< displacement solution x
   b.resize(_NoLevels);      res.resize(_NoLevels);   // rhs
 
   // restr and prol operators -----------------
@@ -94,6 +96,8 @@ MGSolBase::~MGSolBase(
   A.clear();    x.clear();        //  A and x
   x_old.clear(); x_oold.clear();  //  old solutions
   disp.clear(); // displacement for mesh
+ nn_eq_disp.clear(); ///< displacement solution x
+ nn_eq_x_old.clear(); ///< displacement solution x
   b.clear();    res.clear();      //  rhs and residual vector
   Rst.clear();    Prl.clear();    // Restrictor and projector
 //   _attrib.clear();                // Cell properties
@@ -115,6 +119,7 @@ void MGSolBase::clear(
     delete A[Level];  delete x[Level];             //  A and x  at Level
     delete b[Level];delete res[Level];             //  old solutions  at Level
     delete x_old[Level]; delete x_oold[Level];     //  rhs and residual vector
+    delete nn_eq_disp[Level]; delete nn_eq_x_old[Level];     //  rhs and residual vector
     delete disp[Level];
 //     delete _attrib[Level];                         // Cell properties  at Level
     delete [] _node_dof[ Level];                   // dof distribution at Level
