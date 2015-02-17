@@ -113,6 +113,7 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   echo "APPLICATION=" $FM_MYAPP "APP_NAME=" $APP_NAME "APP_VER=" $APP_VER "METHOD=" $METHOD "in USER_APPL/"$FM_MYAPP
   echo  "path " $PWD 
   mkdir RESU
+  source change_test.sh 0
   make gencase
   mpiexec -np 1 ../gencase/gencase-opt
   chmod 777 ../
