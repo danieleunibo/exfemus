@@ -5,10 +5,10 @@ if [ "$1" = "" ]; then
 else
   case $1 in
     0)
-        sed -i s/.*define.*DIMENSION.*(.*).*/#define\ DIMENSION\ \(2\)/ ./DATA/Domain_conf.h
-	sed -i 's/.*define.*MATBC_INTERFACE.*/\/\/ #define\ MATBC_INTERFACE/' ./DATA/Domain_conf.h
-	sed -i s/.*nolevels.*/\ nolevels\ \ \ \ \ \ 2/ DATA/parameters.in
-	sed -i s/.*libmesh_gen.*/\ libmesh_gen\ \ \ 1/ DATA/parameters.in
+#         sed -i s/.*define.*DIMENSION.*(.*).*/#define\ DIMENSION\ \(2\)/ ./DATA/Domain_conf.h
+# 	sed -i 's/.*define.*MATBC_INTERFACE.*/\/\/ #define\ MATBC_INTERFACE/' ./DATA/Domain_conf.h
+# 	sed -i s/.*nolevels.*/\ nolevels\ \ \ \ \ \ 2/ DATA/parameters.in
+# 	sed -i s/.*libmesh_gen.*/\ libmesh_gen\ \ \ 1/ DATA/parameters.in
 	echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 	echo ">>>               BATHE 2D fsi test                 >>>"
 	echo ">>>     changed Domain_conf and parameters.in       >>>"
