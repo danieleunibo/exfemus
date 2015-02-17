@@ -153,7 +153,7 @@ double Compute_quad_term(double  _ub_dxg[DIMENSION*DIMENSION] , int ivar, double
                      int idimp2=(ivar+2+_dir)%ndim; // block +1 [2-6-7] ---------------
 #endif
 #ifdef NEO_HOOKIAN
-
+// // // // _ub_dxg=ux,uy,uz,vx,vy,vz
 			
                             quad_term=mus/J*(
   dphiidx_g[2][ivar]*(
@@ -341,6 +341,7 @@ void  MGSolFSI::GenMatRhs(const double time, const int
     int ns_idx=_data_eq[2].indx_ub[_data_eq[2].tab_eqs[FS_F]];      // FSI equation [FS_F]]
     int sdx_idx=_data_eq[2].indx_ub[_data_eq[2].tab_eqs[SDSX_F]];      // DS equation [SDSX_F]]
     double vel_g[DIMENSION];
+     double vel_gold[DIMENSION];
     double vel_gdx[DIMENSION*DIMENSION];   // velocity field
     double kappa_mg[2];
     double val_tbg[10];
@@ -350,7 +351,7 @@ void  MGSolFSI::GenMatRhs(const double time, const int
     double src_value[DIMENSION];
  double bc_value[DIMENSION];
    int imesh=atoi(_mgutils.get_file("MESHNUMBER").c_str());
-   double dumping=0.;
+   double dumping=0.0;
    
 #ifdef  HAVE_MED
     int interface_id=1;
@@ -439,8 +440,19 @@ void  MGSolFSI::GenMatRhs(const double time, const int
             }
         }
        _data_eq[2].mg_eqs[0]->get_el_sol(DIMENSION,1,el_ndof[1],el_conn, offset,0,_data_eq[1].ub);
+       
+               
+//        _data_eq[2].mg_eqs[0]->get_el_sol(0,DIMENSION,el_ndof[2],el_conn,offset,0,_old_sol);
+       
        _mgmesh.get_el_nod_disp(0,Level,iel/*,el_conn*/,_disp_el);// _disp_el is the last displacement of the element
 
+        for (int deg=2; deg<3; deg++) {
+            for (int eq=0; eq<_data_eq[deg].n_eqs; eq++) {
+                _data_eq[deg].mg_eqs[eq]->get_el_oldsol(0,_data_eq[deg].indx_ub[eq+1]-
+                                                     _data_eq[deg].indx_ub[eq],el_ndof[deg],el_conn,offset,_data_eq[deg].indx_ub[eq],
+                                                     _old_sol);
+            }
+        }
         ////-----------------------------------------------------------------------------------------------------------------------------------------------------
 // #if FSI_EQUATIONS%2==0 // pressure as external field (projection or splitting)
 //     _data_eq[1].mg_eqs[_data_eq[1].tab_eqs[P_F]]->get_el_oldsol(0,1,el_ndof[1],el_conn, offset,1,_data_eq[1].ub);
@@ -449,6 +461,8 @@ void  MGSolFSI::GenMatRhs(const double time, const int
 // #endif
         ////-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+       
+       
         // element fields ----------------------------------
         double phase=1.;
         double rho =  phase;
@@ -537,6 +551,7 @@ if (phase==0){
             // quadratic fields
             interp_el_sol(_data_eq[2].ub,0,_data_eq[2].indx_ub[_data_eq[2].n_eqs],
                           _phi_g[2],el_ndof[2],_ub_g[2]);                                // field
+	    interp_el_sol(_old_sol,0,_data_eq[2].indx_ub[_data_eq[2].n_eqs], _phi_g[2],el_ndof[2],_old_solg);   
 //             interp_el_gdx(_data_eq[2].ub,ns_idx,DIMENSION,_dphi_g[2],el_ndof[2],vel_gdx); // derivatives
 	                    interp_el_sol(_disp_el,0,DIMENSION, _phi_g[2],el_ndof[2],_disp_g);    //old displacement of the point
 
@@ -554,6 +569,7 @@ if (phase==0){
             for (int idim=0; idim< DIMENSION; idim++) {
                 // velocity field  -> gaussian points <- _ub_g[2][ns_idx+idim]
                 vel_g[idim]=_ub_g[2][ns_idx+idim];
+	        vel_gold[idim]=_old_solg[ns_idx+idim];
                 mod2_vel +=vel_g[idim]*vel_g[idim];
 		_ale_vel_g[idim]=(_disp_g[idim]/_dt); //ale velocity
                 // turbulence production term  -> _sP
@@ -609,7 +625,8 @@ if (phase==0){
                     // Assemblying rhs ----------------------------
                     if (mode == 1)                {
                         FeM(indx)  +=  dtxJxW_g*(
-                                           rho*vel_g[ivar+_dir]*phii_g/_dt     // time*/
+                                           rho*(1/GAMMA)*(vel_g[ivar+_dir]*phii_g/_dt     // time*/
+                                           +(1-GAMMA)*(vel_g[ivar+_dir]-vel_gold[ivar+_dir])*phii_g/_dt)
 //                                            + rho*_IFr*_dirg[ivar+_dir]*phii_g  // x-gravity
 //                                            + src_value[ivar+_dir]*phii_g
 //                                               +(1-ivar)*phii_g
@@ -637,9 +654,10 @@ if (phase==0){
                             Div_g +=_ub_dxg[kdim+kdim*ndim];
                         }
                         // diagonal blocks [1-5-9]
-                        KeM(indx,j+ivar*el_ndof[2]) +=dtxJxW_g*rho*(
-                                                          phij_g*phii_g/_dt  // time
-                                                          + Adv_g            // advection
+                        KeM(indx,j+ivar*el_ndof[2]) +=dtxJxW_g*(
+//                                                           phij_g*phii_g/_dt  // time
+                                                   rho* (1/GAMMA)*phij_g*phii_g/_dt  // time
+                                                          + rho*Adv_g            // advection
                                                           + Lap_g            // viscous Laplacian
                                                          + (IRe_eff+0.*f_upwind[ivar+0*_dir]*vel_g[ivar+0*_dir]*vel_g[ivar+0*_dir]  )// upwind
                                                           *(dphijdx_g[2][ivar+_dir]*dphiidx_g[2][ivar+_dir])   // viscous tensor
@@ -702,7 +720,7 @@ if (phase==0){
                                 // p-equation
 //                                KeM(indx,indx)=1;
 //                                 FeM(indx)=0.;
-                                KeM(indx,j+jvar*el_ndof[2]) += JxW_g[2]*rho*(
+                                KeM(indx,j+jvar*el_ndof[2]) += JxW_g[2]*(
                                                                     psii_g*_dphi_g[2][j+jvar*el_ndof[2]]  // div=0
  #ifdef AXISYM
                                                                    +(1-jvar)*psii_g*phij_g/_ub_g[2][0]
@@ -813,11 +831,13 @@ if (phase==0){
                             if (mode == 1)  {
                                 for(int idim=0; idim<DIMENSION; idim++) bc_value[idim]=0.;
 
-
+ double boundary_vel=1.*sin(3.1415/0.1*time+3.1415/2);
+//  double corr=((time <2)? (1-cos(3.1415/2*time))/2:1);
                                 FeM(indx_row) += /*bc_rhs*Ipenalty* */
                                     (1-bc_rhs)*Ipenalty*(1-bc_normal)*(1-bc_tg)*0.+// bc_value[ivar]+
                                     bc_rhs*Ipenalty*( // Dirichlet -> non-homogeneous flag (1??)
                                         (1-bc_normal)*(1-bc_tg)*vel_g[ivar+_dir]//_data_eq[2].ub[ns_idx*NDOF_FEM+indx_sol]// _u_old[indx_sol]    // (100) single comp bc
+//                                         (1-bc_normal)*(1-bc_tg)*boundary_vel//_data_eq[2].ub[ns_idx*NDOF_FEM+indx_sol]// _u_old[indx_sol]    // (100) single comp bc
                                         +bc_normal*vdotn*normal[ivar+_dir]              // (101)normal Dirichlet bc
                                         +bc_tg*(vel_g[ivar+_dir]-vdotn*normal[ivar+_dir])// (110) tg Dirichlet bc
                                     );
@@ -835,6 +855,7 @@ if (phase==0){
                             for (int   jvar=ivar+_dir+1; jvar< ndim+_dir; jvar++)    {
                                 int      jvar1=jvar%DIMENSION;
 #if FSI_EQUATIONS==2
+				
                                 FeM(indx_row) += -1.*Ipenalty*_data_eq[2].ub[(ns_idx+jvar1)*NDOF_FEM+sur_toply[i]]*
 #else
 //                 if(fabs(normal[jvar1]*normal[ivar+_dir]) >1.e-13 || bc_normal >= 1){
@@ -901,7 +922,7 @@ if (phase==0){
                                 // Assemblying rhs ----------------------------
                                 if (mode == 1)   {
                                    if (imesh==1)
-                                        FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*(3.e+5/_refvalue[DIMENSION]);//(_ub_g[1][0]);
+                                        FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*(400000/_refvalue[DIMENSION]);//(_ub_g[1][0]);
 
                                 }
                                 
@@ -1002,10 +1023,12 @@ if (phase==1){
 
             // quadratic fields
             interp_el_sol(_data_eq[2].ub,0,_data_eq[2].indx_ub[_data_eq[2].n_eqs], _phi_g[2],el_ndof[2],_ub_g[2]);   
+	    interp_el_sol(_old_sol,0,_data_eq[2].indx_ub[_data_eq[2].n_eqs], _phi_g[2],el_ndof[2],_old_solg);   
 // 	    interp_el_gdx(_data_eq[2].ub,ns_idx,DIMENSION,_dphi_g[2],el_ndof[2],vel_gdx); // derivatives
 	    #ifdef DS_EQUATIONS
          // derivatives of the material displacement(with respect to the material coordinate)
             interp_el_gdx(_data_eq[2].ub,sdx_idx,DIMENSION,_dphi_g[2],el_ndof[2],_ub_dxg);
+// // // // _ub_dxg=ux,uy,uz,vx,vy,vz
             #endif
 	    
 	  //=====================================calculation deformation gradient==============================
@@ -1026,6 +1049,7 @@ if (phase==1){
             for (int idim=0; idim< DIMENSION; idim++) {
                 // velocity field  -> gaussian points <- _ub_g[2][ns_idx+idim]
                 vel_g[idim]=_ub_g[2][ns_idx+idim];
+		vel_gold[idim]=_old_solg[ns_idx+idim];
                 mod2_vel +=vel_g[idim]*vel_g[idim];
                 // turbulence production term  -> _sP
                 for (int jdim=0; jdim< DIMENSION; jdim++) {
@@ -1079,21 +1103,27 @@ if (phase==1){
                     #if DIMENSION==3
                      int idimp2=(ivar+2+_dir)%ndim; // block +1 [2-6-7] ---------------
 #endif
-		    #ifndef COMPRESSIBLE
-		    
-                        _lambda=0;
+  #ifndef COMPRESSIBLE
                         J=1.;
-                #endif
- 			#ifdef MOONEY_RIVLIN
+   #endif
+#ifdef MOONEY_RIVLIN
 			    double c1=_mus/4;
 			    double c2=_mus/4;
+// 			double c1=145238.062/_refvalue[DIMENSION];
+// 			    double c2=122333.679/_refvalue[DIMENSION];
 #endif
-                double quad_term=Compute_quad_term(_ub_dxg, ivar, _mus,dphiidx_g, _dir, ndim, I,J);
+
+			   double quad_term=0.; 
+			   
+                 quad_term=Compute_quad_term(_ub_dxg, ivar, _mus,dphiidx_g, _dir, ndim, I,J);
+// 			   if (fabs(quad_term)>10000)
+// 		 std::cout<<"LAAAAAAArge"<<std::endl;
                     // Assemblying rhs ----------------------------
                     if (mode == 1)                {
                         FeM(indx)  +=  dtxJxW_g*(
-                                           rho*vel_g[ivar+_dir]*phii_g/_dt     // time*/
-                                           +quad_term
+                                           rho*(1/GAMMA)*(vel_g[ivar+_dir]*phii_g/_dt     // time*/
+                                           +(1-GAMMA)*(vel_g[ivar+_dir]-vel_gold[ivar+_dir])*phii_g/_dt)
+// 					    -rho*quad_term
 //                                            + rho*_IFr*_dirg[ivar+_dir]*phii_g  // x-gravity
 //                                            + src_value[ivar+_dir]*phii_g
 //                                               +(1-ivar)*phii_g
@@ -1134,7 +1164,7 @@ if (phase==1){
 
                             sig_1_lin[idimp2]= _mus*(dphijdx_g[2][ivar]*dphiidx_g[2][idimp2]);
 #endif
-
+#ifdef COMPRESSIBLE
                             sig_3_lin[ivar]=_lambda*dphijdx_g[2][ivar]*dphiidx_g[2][ivar];
 #ifdef AXISYM
                             sig_3_lin[ivar]+=_lambda*(1-ivar)*(dphijdx_g[2][ivar]*phii_g+dphiidx_g[2][ivar]*phij_g+phij_g*phii_g/_ub_g[2][0])/_ub_g[2][0];
@@ -1146,12 +1176,33 @@ if (phase==1){
 #endif
 #if DIMENSION==3
                             sig_3_lin[idimp2]= _lambda*dphijdx_g[2][idimp2]*dphiidx_g[2][ivar];
-
+#endif
 #endif
 
 #endif //LINEAR_ELASTICITY
 
+#ifdef VENANT_KIRCHH
+                          double b_coeff=_lambda*(I-3)-1;
+/// Linear tensor
+                            sig_1_lin[ivar]=(2*_mus+b_coeff)*(2*dphijdx_g[2][ivar]*dphiidx_g[2][ivar]+
+                                                  dphijdx_g[2][idimp1]*dphiidx_g[2][idimp1]
+#if DIMENSION==3
+                                                  + dphijdx_g[2][idimp2]*dphiidx_g[2][idimp2]
+#endif
+                                                 );
+                            sig_1_lin[idimp1]= (2*_mus+b_coeff)*(dphijdx_g[2][ivar+_dir]*dphiidx_g[2][idimp1]);
+#if DIMENSION==3
 
+                            sig_1_lin[idimp2]=(2*_mus+b_coeff)*(dphijdx_g[2][ivar]*dphiidx_g[2][idimp2]);
+#endif
+
+                            sig_3_lin[ivar]=0.;
+                            sig_3_lin[idimp1]=0.;
+#if DIMENSION==3
+                            sig_3_lin[idimp2]= 0.;
+#endif
+
+#endif //LINEAR_ELASTICITY
 
 #ifdef NEO_HOOKIAN
 /// Linear tensor
@@ -1189,8 +1240,32 @@ if (phase==1){
 #endif
 #endif
 
+			    
+			    //quadratic part of the tensor
 
-
+//                             double quad_Kem_term=mus/J*(
+//   dphiidx_g[2][ivar]*(
+//                                                     +_ub_dxg[ivar+DIMENSION*ivar]*dphiidx_g[2][ivar]
+//                                                     +_ub_dxg[ivar+DIMENSION*idimp1]*_ub_dxg[ivar+DIMENSION*idimp1]
+// #if DIMENSION==3
+//                                                     +_ub_dxg[ivar+DIMENSION*idimp2]*_ub_dxg[ivar+DIMENSION*idimp2]
+// #endif
+//                                                 )+
+//                                                 dphiidx_g[2][idimp1]*(
+//                                                     +dphiidx_g[2][ivar]*_ub_dxg[idimp1+DIMENSION*ivar]
+//                                                     +_ub_dxg[ivar+DIMENSION*idimp1]*_ub_dxg[idimp1+DIMENSION*idimp1]
+// #if DIMENSION==3
+//                                                     +_ub_dxg[ivar+DIMENSION*idimp2]*_ub_dxg[idimp1+DIMENSION*idimp2]
+// #endif
+//                                                 )
+// #if DIMENSION==3
+//                                                 +dphiidx_g[2][idimp2]*(
+//                                                     +_ub_dxg[ivar+DIMENSION*ivar]*_ub_dxg[idimp2+DIMENSION*ivar]
+//                                                     +_ub_dxg[ivar+DIMENSION*idimp1]*_ub_dxg[idimp2+DIMENSION*idimp1]
+//                                                     +_ub_dxg[ivar+DIMENSION*idimp2]*_ub_dxg[idimp2+DIMENSION*idimp2]
+//                                                 )
+// #endif
+//                                             );			
 
 #endif //NEO_HOOKIAN   
 #ifdef MOONEY_RIVLIN
@@ -1212,22 +1287,22 @@ if (phase==1){
                                                ;
 
 
-sig_1_lin[ivar]+=2*c2*(
-  +dphiidx_g[2][ivar]*(2*I*dphijdx_g[2][ivar]-4*dphijdx_g[2][ivar])
-  +dphiidx_g[2][idimp1]*(I*dphijdx_g[2][idimp1] - 2*dphijdx_g[2][idimp1])
-  #if DIMENSION==3
-   +dphiidx_g[2][idimp2]*(I*dphijdx_g[2][idimp2] - 2*dphijdx_g[2][idimp2])
-  #endif
-);
-                            
- sig_1_lin[idimp1]+=2*c2*(
-   +dphiidx_g[2][idimp1]*(I*dphijdx_g[2][ivar]-2*dphijdx_g[2][ivar])
-);
-  #if DIMENSION==3
- sig_1_lin[idimp2]+=2*c2*(
-   +dphiidx_g[2][idimp2]*(I*dphijdx_g[2][ivar]-2*dphijdx_g[2][ivar])
-);
- #endif
+// sig_1_lin[ivar]+=2*c2*(
+//   +dphiidx_g[2][ivar]*(2*I*dphijdx_g[2][ivar]-4*dphijdx_g[2][ivar])
+//   +dphiidx_g[2][idimp1]*(I*dphijdx_g[2][idimp1] - 2*dphijdx_g[2][idimp1])
+//   #if DIMENSION==3
+//    +dphiidx_g[2][idimp2]*(I*dphijdx_g[2][idimp2] - 2*dphijdx_g[2][idimp2])
+//   #endif
+// );
+//                             
+//  sig_1_lin[idimp1]+=2*c2*(
+//    +dphiidx_g[2][idimp1]*(I*dphijdx_g[2][ivar]-2*dphijdx_g[2][ivar])
+// );
+//   #if DIMENSION==3
+//  sig_1_lin[idimp2]+=2*c2*(
+//    +dphiidx_g[2][idimp2]*(I*dphijdx_g[2][ivar]-2*dphijdx_g[2][ivar])
+// );
+//  #endif
 
 
 #endif //MOONEY-RIVLIN
@@ -1239,12 +1314,14 @@ sig_1_lin[ivar]+=2*c2*(
 //  
 //  
 //  
-//  
+
 //  
                         // diagonal blocks [1-5-9]
-                        KeM(indx,j+ivar*el_ndof[2]) +=dtxJxW_g*(rho+dumping)*(
-                                                          phij_g*phii_g/_dt  // time
-                                                          + Adv_g            // advection
+                        KeM(indx,j+ivar*el_ndof[2]) +=dtxJxW_g*(
+                                                         (rho+dumping)* (1/GAMMA)*phij_g*phii_g/_dt  // time
+
+                                                          
+                                                          + (rho)*Adv_g            // advection
 //                                                           + Lap_g            // viscous Laplacian
                                                           +_dt*(sig_1_lin[ivar])
                                                           +_dt*sig_3_lin[ivar]
@@ -1259,7 +1336,7 @@ sig_1_lin[ivar]+=2*c2*(
 #else       // no splitting
                         KeM(indx,j+idimp1*el_ndof[2]) +=
 #endif
-                                      dtxJxW_g* rho*_dt*(
+                                      dtxJxW_g* _dt*(
                                              sig_1_lin[idimp1]
                                              +sig_3_lin[idimp1]
                                          );
@@ -1317,7 +1394,7 @@ sig_1_lin[ivar]+=2*c2*(
                         int  indx=i+el_ndof[2]*_nvars[2];//ivar=0;
                         const double psii_g=_phi_g[ikl][i];
 			#ifndef COMPRESSIBLE	    //(incompressible)
-                           if (mode == 1)   FeM(indx)  +=  JxW_g[2]*psii_g*_ub_g[1][0]*KOMP_FSI; //    _u_old[DIMENSION]*KOMP_NS;
+// //                            if (mode == 1)   FeM(indx)  +=  JxW_g[2]*psii_g*_ub_g[1][0]*KOMP_FSI; //    _u_old[DIMENSION]*KOMP_NS;
 			#endif
 #ifdef COMPRESSIBLE
                             if (_bc_vol[i+_nvars[2]*NDOF_FEM]<3.5)
@@ -1520,8 +1597,18 @@ sig_1_lin[ivar]+=2*c2*(
                                 // set up row i
                                 const double phii_g=_phi_g[2][i];
                                 const int   indx_row=sur_toply[i]+(ivar+_dir)*el_ndof[2];// volume dof index
+                                int idimp1=(ivar+1+_dir)%ndim; // block +1 [2-6-7] ---------------
+
+const int   indx_row_idimp1=sur_toply[i]+(idimp1+_dir)*el_ndof[2];// volume dof index
+                    #if DIMENSION==3
+                     int idimp2=(ivar+2+_dir)%ndim; // block +1 [2-6-7] ---------------
+                     const int   indx_row_idimp2=sur_toply[i]+(idimp2+_dir)*el_ndof[2];// volume dof index
+#endif
+
                                 // boundary flag
                                 int bc_s=(int)_bc_bd[indx_row];
+				int inverter=((bc_s>0)? 1:-1);
+				bc_s=bc_s*inverter;
                                 int bc_v=(int)_bc_vol[indx_row];
                                 double dtJxW_g=JxW_g[2]*(bc_v%2);
                                 int bc_rhs   =((bc_s&4)>>2); // (1??) -> nonhomogeneous
@@ -1530,8 +1617,14 @@ sig_1_lin[ivar]+=2*c2*(
 
                                 // Assemblying rhs ----------------------------
                                 if (mode == 1)   {
+				  double p_val=inverter*(19650.0583/2);
                                    if (imesh==1)
-                                        FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*(_ub_g[1][0]);
+//                                         FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*(_ub_g[1][0]);
+				           FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*((p_val)/_refvalue[DIMENSION]);//(_ub_g[1][0]);
+				         FeM(indx_row_idimp1)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[idimp1+_dir])*((p_val)/_refvalue[DIMENSION]);//(_ub_g[1][0]);
+ #if DIMENSION==3
+  FeM(indx_row_idimp2)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[idimp2+_dir])*((p_val)/_refvalue[DIMENSION]);//(_ub_g[1][0]);
+ #endif
                                 }
 
 // // //                                 Assemblying Matrix ---------------------------------
@@ -1572,7 +1665,7 @@ sig_1_lin[ivar]+=2*c2*(
         } //end for iside
 
         // ==========================================================================
-        // ====================== end solid boundary =====================================
+        // ====================== end solid boundary ================================
         // ==========================================================================
 }//end phase ==1
 // 
@@ -1659,7 +1752,7 @@ void MGSolFSI::MGTimeStep(
 #endif
 
     /// B) Solution of the linear MGsystem (MGSolFSI::MGSolve).
-    MGSolve(1.e-8,40,1,12,40,12);
+    MGSolve(1.e-6,40,1,12,40,12);
 
 #if PRINT_TIME==1
     end_time=std::clock();
