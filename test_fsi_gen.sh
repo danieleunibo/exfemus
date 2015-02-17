@@ -114,13 +114,13 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   echo  "path " $PWD 
   mkdir RESU
   source ./change_test.sh 0
-#   make gencase
-#   mpiexec -np 1 ../gencase/gencase-opt
-#   chmod 777 ../
-#   make all_clean
-#   make src_clean
-#   make
-#   mpiexec -np 1 ./$FM_MYAPP-opt
+  make gencase
+  mpiexec -np 1 ../gencase/gencase-opt
+  chmod 777 ../
+  make all_clean
+  make src_clean
+  make
+  mpiexec -np 1 ./$FM_MYAPP-opt
   return;
 
 
