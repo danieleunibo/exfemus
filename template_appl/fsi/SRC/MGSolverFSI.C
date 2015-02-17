@@ -901,7 +901,7 @@ if (phase==0){
                                 // Assemblying rhs ----------------------------
                                 if (mode == 1)   {
                                    if (imesh==1)
-                                        FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*(400000/_refvalue[DIMENSION]);//(_ub_g[1][0]);
+                                        FeM(indx_row)  += -1.*bc_rhs*dtJxW_g*phii_g*(normal[ivar+_dir])*(3.e+5/_refvalue[DIMENSION]);//(_ub_g[1][0]);
 
                                 }
                                 
