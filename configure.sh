@@ -1,6 +1,6 @@
 export INSTALLATION_DIR=/home4/software_jenk 
 export OPENMPI_NAME=openmpi-1.8.3 
-export PETSC_NAME=petsc-3.5.2 
+export PETSC_NAME=petsc-3.5.2  
 export HDF5_NAME=salome_7.4/hdf5-1.8.10 
 export LIBMESH_NAME=libmesh-0.9.4 
 export SALOME_NAME=salome_7.4 
