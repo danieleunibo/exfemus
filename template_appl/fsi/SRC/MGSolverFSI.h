@@ -55,6 +55,7 @@ private:
 //   // element class field  (u,v,w,p)
    int   _bc_vol[NDOF_FEM*(DIMENSION+1)]; ///<  element  b.cond flags (vol int)
    int   _bc_bd[NDOF_FEM*(DIMENSION+1)];  ///<  element  b.cond flags  (bd int)
+
 // 
 //   // ------------------ integration -----------------------
 //   // shape and derivative function at a  gaussian point
@@ -62,13 +63,14 @@ private:
    double  _ub_g[3][10];                  ///< external field  (0-1-2 degree)
    double  _disp_g[3],_disp_old_g[3],_ale_vel_g[3];                  ///< external field  (0-1-2 degree)
    double  _disp_el[DIMENSION*NDOF_FEM];
+   double  _old_solg[8*DIMENSION];
    double  _ub_dxg[DIMENSION*DIMENSION];  ///< external field derivative  (0-1-2 degree)
-  
+   double  _old_sol[20*NDOF_FEM];
   // ======================  end data ==========================================
   
   // ======================  start functions =================================== 
 public:
-
+       
   /// b)   Init MGSolFSI functions (constructor,destructor,external fields):
   MGSolFSI(                               ///< Constructor
     MGEquationsSystem& mg_equations_map, ///< equation map class (Mesh and parameters)

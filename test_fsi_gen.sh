@@ -7,7 +7,7 @@ export SALOME_NAME=salome_7.4
 export med3_NAME=med-3.0.7 
 export MED_NAME=MED_7.4.0
 
-########## Over here there MUST be the definition of       #############
+########## Over here there MUST be the definition of       ############# 
 ########## $INSTALLATION_DIR, given when installing femus; #############
 ########## otherwise, write it on your own                 #############
 #######################################################################
@@ -105,7 +105,7 @@ export LD_LIBRARY_PATH=$PETSC_DIR/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$HDF5_PATH/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$med_PATH/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
-################################################
+################################################   
 
 
   cp -r template_appl/$APP_NAME/   USER_APPL/$APP
@@ -113,6 +113,7 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   echo "APPLICATION=" $FM_MYAPP "APP_NAME=" $APP_NAME "APP_VER=" $APP_VER "METHOD=" $METHOD "in USER_APPL/"$FM_MYAPP
   echo  "path " $PWD 
   mkdir RESU
+  source ./change_test.sh 0
   make gencase
   mpiexec -np 1 ../gencase/gencase-opt
   chmod 777 ../
@@ -120,6 +121,18 @@ export LD_LIBRARY_PATH=$MED_PATH/lib/salome:$LD_LIBRARY_PATH
   make src_clean
   make
   mpiexec -np 1 ./$FM_MYAPP-opt
+  cp -r ./RESU ./RESU_test0
+  #####second test
+  make resu_clean
+  source ./change_test.sh 1
+  make gencase
+  mpiexec -np 1 ../gencase/gencase-opt
+  chmod 777 ../
+  make all_clean
+  make src_clean
+  make
+  mpiexec -np 1 ./$FM_MYAPP-opt
+  cp -r ./RESU ./RESU_test2
   return;
 
 

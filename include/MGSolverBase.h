@@ -69,7 +69,8 @@ public:
   std::vector<NumericVectorM *> x_nonl; ///< non linear solution x
   std::vector<NumericVectorM *> x_user; ///< useful vector x
   std::vector<NumericVectorM *> disp; ///< displacement solution x
-
+  std::vector<NumericVectorM *> nn_eq_disp; ///< displacement solution x
+  std::vector<NumericVectorM *> nn_eq_x_old; ///< displacement solution x
    ///< 
   ///@}
   // ---------------------------------------

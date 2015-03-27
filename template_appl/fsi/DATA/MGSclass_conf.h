@@ -176,6 +176,9 @@
 // #define COMPRESSIBLE
 //Physical dimensions of the mesh: 
 //  
+// time discretization
+// if GAMMA =1 euler time discretization otherwise NEWMARK
+#define GAMMA (0.5)
 // MULTIGRID PARAMETERS
 // -------------------------------
 // Navier-Stokes solver type

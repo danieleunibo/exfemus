@@ -40,19 +40,19 @@ void MGSolFSI::bc_intern_read(
 
 
 #if DIMENSION==2
-    if (mat_gam==2) { // fluid
+    if (xp[0]<(LXE-LXB)/2-BDRY_TOLL) { // fluid
     bc_flag[0]=1;     bc_Neum[0]=1 ;
     bc_flag[1]=1;     bc_Neum[1]=1 ;
-    bc_flag[2]=1;    bc_Neum[2]=1;   
+                      bc_Neum[2]=1;   
   }  else { //solid
-      bc_flag[0]=1;         bc_Neum[0]=3 ;
+      bc_flag[0]=1;      bc_Neum[0]=3 ;
       bc_flag[1]=1;      bc_Neum[1]=3 ;
-      bc_flag[2]=1;      bc_Neum[2]=3;  // pressure flag 
+                         bc_Neum[2]=3;  // pressure flag 
     }
-   if (bc_gam==1000)   {  // interface boundary
-      bc_flag[0]=0;        bc_Neum[0]=5;
-      bc_flag[1]=0;      bc_Neum[1]=5;
-      bc_flag[2]=0;      bc_Neum[2]=4;
+   if (fabs(xp[0]-(LXE-LXB)/2 )<BDRY_TOLL)   {  // interface boundary
+      bc_flag[0]=0;   bc_Neum[0]=5;
+      bc_flag[1]=0;   bc_Neum[1]=5;
+                      bc_Neum[2]=5;
     }
 #endif
 #if DIMENSION==3
@@ -96,7 +96,10 @@ void MGSolFSI::ic_read(
 {
     u_value[0]=0.; u_value[1]=0.; u_value[2]=0.;
     
-         if (bc_gam==10) { u_value[0]=10.; }
+    if (bc_gam==10) { u_value[0]=10.; }
+#if DIMENSION==2
+ if (xp[0]<LXB+BDRY_TOLL) u_value[0]=0.8;
+#endif
 #if DIMENSION==3
     u_value[3]=0;
 #endif
@@ -120,40 +123,32 @@ void MGSolFSI::bc_read(
 // ===================================
 //   double ILref = 1./_lref;
 #if DIMENSION==2  // ----- 2D boundary conditions ----------
-   if (bc_gam==10) { 
+    if (xp[0]<LXB+BDRY_TOLL) { //inlet
     bc_flag[0]=4;     bc_Neum[0]=0 ;
     bc_flag[1]=0;     bc_Neum[1]=0 ;
-    bc_flag[2]=0;     bc_Neum[2]=1 ;
+                      bc_Neum[2]=1 ;
     }
-   if (bc_gam==11) { 
-    bc_flag[0]=0;     bc_Neum[0]=0 ;
-    bc_flag[1]=0;     bc_Neum[1]=0 ;
-    bc_flag[2]=0;     bc_Neum[2]=1 ;
-    }
-   if (bc_gam==13) { 
-    bc_flag[0]=0;     bc_Neum[0]=0 ;
-    bc_flag[1]=0;     bc_Neum[1]=0 ;
-    bc_flag[2]=0;     bc_Neum[2]=1 ;
-    }
-    if (bc_gam==14) { 
-    bc_flag[0]=0;     bc_Neum[0]=1 ;
-    bc_flag[1]=0;     bc_Neum[1]=0 ;
-    bc_flag[2]=0;     bc_Neum[2]=1 ;
-    }
-    if (bc_gam==16) { 
-    bc_flag[0]=0;     bc_Neum[0]=0 ;
-    bc_flag[1]=0;     bc_Neum[1]=0 ;
-    bc_flag[2]=0;     bc_Neum[2]=1 ;
-    }
-    if (bc_gam==26) { 
+    if (xp[0]<(LXE-LXB)/2-BDRY_TOLL){//liquid border
+      if (xp[1]<LYB+BDRY_TOLL || xp[1]>LYE-BDRY_TOLL ) { 
+	bc_flag[0]=0;     bc_Neum[0]=0 ;
+	bc_flag[1]=0;     bc_Neum[1]=0 ;
+			  bc_Neum[2]=1 ;
+	}
+    }else if (xp[0]>(LXE-LXB)/2+BDRY_TOLL){
+      	bc_flag[0]=0;     bc_Neum[0]=3 ;//solid border
+	bc_flag[1]=0;     bc_Neum[1]=3 ;
+			  bc_Neum[2]=3 ;
+      if (xp[0]>LXE-BDRY_TOLL) { //solid end
     bc_flag[0]=0;     bc_Neum[0]=2 ;
     bc_flag[1]=0;     bc_Neum[1]=2 ;
-    bc_flag[2]=0;     bc_Neum[2]=3 ;
+                      bc_Neum[2]=3 ;
     }
-    if (bc_gam==1000) { 
-    bc_flag[0]=0;     bc_Neum[0]=4 ;
+    }
+
+    if(fabs(xp[0]-(LXE-LXB)/2 )<BDRY_TOLL)  { //interface
+    bc_flag[0]=0;     bc_Neum[0]=5 ;
     bc_flag[1]=0;     bc_Neum[1]=4 ;
-    bc_flag[2]=0;     bc_Neum[2]=5 ;
+                      bc_Neum[2]=5 ;
     }
 #endif
 

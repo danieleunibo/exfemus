@@ -18,7 +18,7 @@
 
 #if DIMENSION==2  // =========================
   #define LXB (0.)
-  #define LXE (1.)
+  #define LXE (2.)
   #define LYB (0.)
   #define LYE (1.)
   #define LZB (0.)

@@ -61,6 +61,8 @@ MGSolBase::MGSolBase(MGEquationsSystem& e_map_in, // equation map
   x_nonl.resize(_NoLevels); // non linear solution
   x_user.resize(_NoLevels); // useful vector
   disp.resize(_NoLevels);// displacement for mesh
+   nn_eq_disp.resize(_NoLevels); ///< displacement solution x ATTENTION really needed?
+   nn_eq_x_old.resize(_NoLevels); ///< displacement solution x ATTENTION really needed?
   b.resize(_NoLevels);      res.resize(_NoLevels);   // rhs
 
   // restr and prol operators -----------------
@@ -98,6 +100,8 @@ MGSolBase::~MGSolBase(
   x_nonl.clear(); // nonlinear solution tmp
   x_user.clear(); // useful vector
   disp.clear(); // displacement for mesh
+ nn_eq_disp.clear(); ///< displacement solution x
+ nn_eq_x_old.clear(); ///< displacement solution x
   b.clear();    res.clear();      //  rhs and residual vector
   Rst.clear();    Prl.clear();    // Restrictor and projector
 //   _attrib.clear();                // Cell properties
@@ -118,8 +122,10 @@ void MGSolBase::clear(
   for (int Level =0; Level<_NoLevels; Level++) {
     delete A[Level];  delete x[Level];             //  A and x  at Level
     delete b[Level];delete res[Level];             //  old solutions  at Level
-    delete x_old[Level]; delete x_oold[Level]; delete x_nonl[Level];    //  rhs and residual vector
-    delete disp[Level]; delete x_user[Level];
+    delete x_old[Level]; delete x_oold[Level];     //  rhs and residual vector
+    delete x_nonl[Level]; delete x_user[Level];
+    delete nn_eq_disp[Level]; delete nn_eq_x_old[Level];   // ATTENTION really needed?
+    delete disp[Level];
 //     delete _attrib[Level];                         // Cell properties  at Level
     delete [] _node_dof[ Level];                   // dof distribution at Level
     delete _solver[Level];                         //delete solver  at Level
