@@ -122,6 +122,7 @@ void MGFE::clear(
     delete []_weight1[idim];       // weight
     delete []_phi_map1[idim];      // shapes at g.p.
     delete []_dphidxez_map1[idim]; // derivatives at g.p.
+    delete []_dphidxez_map1_nodes[idim]; // derivatives on nodes
   }
   return;
 }

@@ -1,5 +1,5 @@
-#ifndef __mgsolverns_h__
-#define __mgsolverns_h__
+#ifndef __mgsolvernsc_h__
+#define __mgsolvernsc_h__
 
 #include "Equations_conf.h"
 // =================================

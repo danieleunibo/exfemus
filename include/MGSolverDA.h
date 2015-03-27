@@ -160,6 +160,21 @@ void ReadRest (   ///< Restriction Op.
     const double time,               // time               <-
     const int    mode                // rhs assembler flag <-   
   ); 
+    /// MG time step solver (backward Euler).
+  virtual void MGTimeStep_nl_setup(
+    const double time,               // time               <-
+    const int    mode                // rhs assembler flag <-   
+  ); 
+      /// MG time step solver (backward Euler).
+  virtual void MGTimeStep_nl_sol_up(
+    const double time,               // time               <-
+    const int    mode                // rhs assembler flag <-   
+  ); 
+        /// MG time step solver (backward Euler).
+  virtual int MGTimeStep_nl_iter(
+    const double time,               // time               <-
+    const int    mode                // rhs assembler flag <-   
+  ); 
 ///@}  
   
   // ========================================================================

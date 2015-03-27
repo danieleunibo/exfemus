@@ -279,7 +279,7 @@ void SparseMMatrixM::read_len_hdf5(
   // row lengths -------------------------------------------------------------
   std::ostringstream name_dst;  name_dst.str("");name_dst << "LEN0" <<mode;
   hid_t dataset=H5Dopen(file_id,name_dst.str().c_str()
-    #if HDF5_VERSIONM!=188                        
+    #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
@@ -287,7 +287,7 @@ void SparseMMatrixM::read_len_hdf5(
   // matrix row off entry lengths --------------------------------------------
   name_dst.str(""); name_dst <<"OFFLEN0" <<mode;
   dataset=H5Dopen(file_id,name_dst.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
@@ -315,14 +315,14 @@ void SparseMMatrixM::read_pos_hdf5(
 
   std::ostringstream name_dst;  name_dst.str(""); name_dst << "POS0" <<mode;
   hid_t dataset=H5Dopen(file_id,name_dst.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
   hid_t status=H5Dread(dataset,H5T_NATIVE_INT,H5S_ALL,H5S_ALL,H5P_DEFAULT,pos_row);assert(status==0);
   name_dst.str(""); name_dst << "VAL0" <<mode;
   dataset=H5Dopen(file_id,name_dst.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
@@ -345,7 +345,7 @@ int SparseMMatrixM::read_dim_hdf5(
  std::ostringstream name_dst;  name_dst.str(""); name_dst << "DIM0" <<mode;
   // linear ------------------------------------------------
  hid_t  dataset=H5Dopen(file_id,name_dst.str().c_str()
-   #if HDF5_VERSIONM!=188                        
+   #if HDF5_VERSIONM!=1808                        
                            , H5P_DEFAULT                    
     #endif
  );

@@ -23,6 +23,7 @@
 #include "MGFEMap.h"
 #include "MGFE.h"
 #include "MGEquationsSystem.h"
+#include "Equations_conf.h"
 #include "MGTimeLoop.h"
 
 
@@ -76,7 +77,7 @@ FEMUS::FEMUS(
 
   // femus init
   int argc = 0;    char ** argv = NULL;
-  _start=new  MGFemusInit(argc,argv);
+  _start= new MGFemusInit(argc,argv);
 
   return;
 }
@@ -110,18 +111,23 @@ void FEMUS::init_fem(
 FEMUS::~FEMUS() {
   // ==========================================================================
   delete _start;
+  delete _mg_time_loop;
+//   delete _mg_equations_map;
+//   delete _mg_utils;
+//   delete _mg_mesh;
+//   delete _mg_femap;
   #ifdef HAVE_MED
 //   if(_med_mesh) _med_mesh->decrRef();        // med-mesh
 #endif
 
 }
 
-// // ============================================================================
-// // This function is the problem destructor
-// void FEMUS::terminate(
-// ) {// =========================================================================
-// 
-// }
+// ============================================================================
+// This function is the problem destructor
+void FEMUS::terminate(
+) {// =========================================================================
+
+}
 
 // // // ****************************************************************************
 // // // ****************    end Constructor Destructor *****************************
@@ -224,7 +230,18 @@ void FEMUS::solve_onestep(
   _mg_time_loop->transient_onestep(t_in,t_step,print_step,time,dt);    ///< step time
   return;
 }
-
+//=============================================================================
+// This function solves one step  for transient problems
+void FEMUS::solve_non_linear_onestep(
+  const int  & t_in,                 ///< initial time iteration
+  const int  & t_step,               ///< actual time iteration
+  const int  & print_step,            ///< print every
+  double     &  time,                ///< actual time
+  double     &  dt                   ///< step time
+) { // ========================================================================
+  _mg_time_loop->transient_non_linear_step(t_in,t_step,print_step,time,dt);    ///< step time
+  return;
+}
 #ifdef HAVE_MED
 // ========================================================================
 // This function gets the Group mesh from the med file (medfile_name)

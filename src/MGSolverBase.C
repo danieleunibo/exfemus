@@ -58,7 +58,9 @@ MGSolBase::MGSolBase(MGEquationsSystem& e_map_in, // equation map
   _Dim =new int[_NoLevels];                          // matrix and vect  dim
   A.resize(_NoLevels);      x.resize(_NoLevels);     // matrix vect sol
   x_old.resize(_NoLevels);  x_oold.resize(_NoLevels);// old solution
-   disp.resize(_NoLevels);// displacement for mesh
+  x_nonl.resize(_NoLevels); // non linear solution
+  x_user.resize(_NoLevels); // useful vector
+  disp.resize(_NoLevels);// displacement for mesh
   b.resize(_NoLevels);      res.resize(_NoLevels);   // rhs
 
   // restr and prol operators -----------------
@@ -93,6 +95,8 @@ MGSolBase::~MGSolBase(
   // release of dynamic variables
   A.clear();    x.clear();        //  A and x
   x_old.clear(); x_oold.clear();  //  old solutions
+  x_nonl.clear(); // nonlinear solution tmp
+  x_user.clear(); // useful vector
   disp.clear(); // displacement for mesh
   b.clear();    res.clear();      //  rhs and residual vector
   Rst.clear();    Prl.clear();    // Restrictor and projector
@@ -114,8 +118,8 @@ void MGSolBase::clear(
   for (int Level =0; Level<_NoLevels; Level++) {
     delete A[Level];  delete x[Level];             //  A and x  at Level
     delete b[Level];delete res[Level];             //  old solutions  at Level
-    delete x_old[Level]; delete x_oold[Level];     //  rhs and residual vector
-    delete disp[Level];
+    delete x_old[Level]; delete x_oold[Level]; delete x_nonl[Level];    //  rhs and residual vector
+    delete disp[Level]; delete x_user[Level];
 //     delete _attrib[Level];                         // Cell properties  at Level
     delete [] _node_dof[ Level];                   // dof distribution at Level
     delete _solver[Level];                         //delete solver  at Level
@@ -210,7 +214,7 @@ double MGSolBase::MGStep(int Level,            // Level
 // ====================================================================
   std::pair<int,double> rest(0,0.);
   if (Level == 0) {   // coarse level ----------------------------------
-    rest=_solver[Level]->solve(*A[Level],*x[Level],*b[Level],Eps1,40);
+    rest=_solver[Level]->solve(*A[Level],*x[Level],*b[Level],Eps1,60);
 
 #ifdef PRINT_CONV
     std::cout<<" Coarse res " << rest.second << " " << rest.first << std::endl;
@@ -243,12 +247,14 @@ double MGSolBase::MGStep(int Level,            // Level
     b[Level-1]->matrix_mult(*res[Level],*Rst[Level-1]);
     //  solving of system of equations for the residual on the coarser grid
     x[Level-1]->zero();
+    double coarser_rest;
     for (int g=1; g <= Gamma; g++)
-      MGStep(Level-1,Eps1,MaxIter,Gamma,Nc_pre,Nc_coarse,Nc_post);
+      coarser_rest= MGStep(Level-1,Eps1,MaxIter,Gamma,Nc_pre,Nc_coarse,Nc_post);
     // interpolation of the solution from the coarser grid (projection)
     res[Level]->matrix_mult(*x[Level-1],*Prl[Level]);
     // adding the coarse solution
-    x[Level]->add(0.95,*res[Level]);//  *x[Level] +=*res[Level];
+    if (coarser_rest < rest.second)
+      x[Level]->add(0.95,*res[Level]);//  *x[Level] +=*res[Level];
     // postsmoothing (Nc_post) --------------------------------------------
 #ifdef PRINT_TIME              //  TC +++++++++++++++ 
     start_time=std::clock();   //   initial set
@@ -386,6 +392,110 @@ void  MGSolBase::get_el_oldsol(
   }
   return;
 }
+// ==========================================================================================
+/// This function gets  the solution  vector at the nodes of  an element.
+void  MGSolBase::get_el_nonl_sol(
+  const int ivar0,      // initial variable  <-
+  const int nvars,      // # of variables to get  <-
+  const int el_nds,     // # of element nodes for this variable  <-
+  const int el_conn[],  // connectivity <-
+  const int offset,     // offset for connectivity <-
+  const int kvar0,      // offset  variable for  uold <-
+  double  uold[]            // element node values ->
+)  const { // ==============================================================
+  for (int
+       id=0; id<el_nds; id++)    {
+    // quadratic -------------------------------------------------
+    for (int
+         ivar=0; ivar<nvars; ivar++) {  //ivarq is like idim
+      const int  kdof_top = _node_dof[_NoLevels-1][ el_conn[id]+(ivar+ivar0)*offset]; // dof from top level
+      uold[ id +(kvar0+ivar)*NDOF_FEM]= ((*x_nonl[_NoLevels-1])(kdof_top));     // element sol
+    } // end quadratic ------------------------------------------------
+  }
+  return;
+}
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+void MGSolBase::MGTimeStep(const double time, const int) {
+
+  std::cout  << std::endl << "  " << _eqname.c_str() << " solution "  << std::endl;
+
+  /// [a] Assemblying of the rhs and matrix at the top level with GenMatRhs(time,top_level,1)
+#if  PRINT_TIME==1
+  std::clock_t start_time=std::clock();
+#endif
+  GenMatRhs(time,_NoLevels-1,1);
+
+  /// [b] Assemblying of the other matrices with GenMatRhs(time,level,0) for all levels
+  for(int Level = 0 ; Level < _NoLevels-1; Level++) GenMatRhs(time,Level,0);
+
+#if    PRINT_TIME==1
+  std::clock_t end_time=std::clock();
+  std::cout << " Assembly time ="<< double(end_time- start_time) / CLOCKS_PER_SEC
+            << " s "<< std::endl;
+#endif
+  /// [c] Solution of the linear system (MGSolverBase::MGSolve).
+  MGSolve(1.e-6,40);
+#if    PRINT_TIME==1
+  std::clock_t end_timef=std::clock();
+  std::cout << " Assembly+solution time ="<< double(end_timef- start_time) / CLOCKS_PER_SEC
+            << "s "<< std::endl;
+#endif
+  /// [d] Update of the old solution at the top Level
+  x[_NoLevels-1]->localize(*x_old[_NoLevels-1]);
+  return;
+}
+
+
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+void MGSolBase::MGTimeStep_nl_setup(const double time, const int) {
+
+  std::cout  << std::endl << "  " << _eqname.c_str() << " solution "  << std::endl;
+
+  /// [a] Assemblying of the rhs and matrix at the top level with GenMatRhs(time,top_level,1)
+#if  PRINT_TIME==1
+  std::clock_t start_time=std::clock();
+#endif
+  GenMatRhs(time,_NoLevels-1,1);
+
+  /// [b] Assemblying of the other matrices with GenMatRhs(time,level,0) for all levels
+  for(int Level = 0 ; Level < _NoLevels-1; Level++) GenMatRhs(time,Level,0);
+
+#if    PRINT_TIME==1
+  std::clock_t end_time=std::clock();
+  std::cout << " Assembly time ="<< double(end_time- start_time) / CLOCKS_PER_SEC
+            << " s "<< std::endl;
+#endif
+  /// [c] Solution of the linear system (MGSolverBase::MGSolve).
+  MGSolve(1.e-6,40);
+#if    PRINT_TIME==1
+  std::clock_t end_timef=std::clock();
+  std::cout << " Assembly+solution time ="<< double(end_timef- start_time) / CLOCKS_PER_SEC
+            << "s "<< std::endl;
+#endif
+  return;
+}
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+int MGSolBase::MGTimeStep_nl_iter(const double time, const int) {
+
+  return 0;
+}
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+void MGSolBase::MGTimeStep_nl_sol_up(const double time, const int) {
+
+  /// [d] Update of the old solution at the top Level
+  x[_NoLevels-1]->localize(*x_old[_NoLevels-1]);
+  return;
+}
+
+
 // ========================================================================
 
 // ========================================================================

@@ -63,8 +63,11 @@ public:
   MGFEMap            & _mgfemap;  ///<  FEM class pointer
   //  --------------------------
    ///@{  \name OLD VECTOR
+
   std::vector<NumericVectorM *> x_old; ///< old solution x
   std::vector<NumericVectorM *> x_oold; ///< oold solution x 
+  std::vector<NumericVectorM *> x_nonl; ///< non linear solution x
+  std::vector<NumericVectorM *> x_user; ///< useful vector x
   std::vector<NumericVectorM *> disp; ///< displacement solution x
 
    ///< 
@@ -159,6 +162,18 @@ public:
  // --------------------------------------
  /// Return old element solution
  void  get_el_oldsol (
+  const int ivar0,                ///< \param[in]   <ivar0>   initial variable  
+  const int nvars,                ///< \param[in]   <nvars>   number of variables to get  <-
+  const int el_nds,               ///< \param[in]   <el_nds>  number  of element nodes for this variable 
+  const int el_conn[],            ///< \param[in]  <el_conn> connectivity 
+  const int offset,               ///< \param[in]  <offset>  offset for connectivity 
+  const int kvar0,                ///< \param[in]  <kvar0>   offset  variable for  uold 
+  double  uold[]                  ///< \param[out]  <uold>   solution
+)  const  ;             
+  ///@}
+ // --------------------------------------
+ /// Return no linear  solution on element
+ void  get_el_nonl_sol (
   const int ivar0,                ///< \param[in]   <ivar0>   initial variable  
   const int nvars,                ///< \param[in]   <nvars>   number of variables to get  <-
   const int el_nds,               ///< \param[in]   <el_nds>  number  of element nodes for this variable 
@@ -292,11 +307,26 @@ public:
   virtual  void  MGTimeStep(  
     const double time,        /// \param[in] <>  time 
     const int    mode         /// \param[in] <>   rhs assembler flag 
-  )=0;                ///< MG time step solver (backward Euler)
-  // -----------------------------------------------------------
-  virtual  void  MGFunctional(  
+  );                ///< MG time step solver (backward Euler)
+    // -----------------------------------------------------------
+  virtual  void  MGTimeStep_nl_setup(  
     const double time,        /// \param[in] <>  time 
-    double starting_distance  /// \param[in] <>  starting distance for gradient method 
+    const int    mode         /// \param[in] <>   rhs assembler flag 
+  );                ///< MG time step solver (backward Euler)
+    // -----------------------------------------------------------
+  virtual  void  MGTimeStep_nl_sol_up(  
+    const double time,        /// \param[in] <>  time 
+    const int    mode         /// \param[in] <>   rhs assembler flag 
+  );                ///< MG time step solver (backward Euler)
+      // -----------------------------------------------------------
+  virtual  int  MGTimeStep_nl_iter(  
+    const double time,        /// \param[in] <>  time 
+    const int    mode         /// \param[in] <>   rhs assembler flag 
+  );            
+  // -----------------------------------------------------------
+  virtual  double  MGFunctional(  
+    int usage,			/// Use of the function: (0) compute functional OR (1) set _eta           
+    double eta_multiplier /// \param[in] <>  eta multiplier for optimal method 
   )=0;                ///< MG time step solver (backward Euler)
  // --------------------------------------------------------------------
   virtual  void  MGSolve(  

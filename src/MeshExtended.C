@@ -58,7 +58,7 @@ void MeshExtended::read_bc_id(int Level) {
   // Getting dataset
   std::ostringstream Name; Name << "NODES/COORD/BC";
   hid_t dtset = H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                         ,H5P_DEFAULT
 #endif
                        );
@@ -107,7 +107,7 @@ void MeshExtended::read_mat_id(int Level) {
   // Getting dataset
   std::ostringstream Name; Name << "ELEMS/SUB/MAT";
   hid_t dtset = H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                         ,H5P_DEFAULT
 #endif
                        );

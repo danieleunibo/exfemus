@@ -49,6 +49,14 @@ public:
     double     &  time,                ///< running time                (in)
     double     &  dt                   ///< step time                   (in)
   );
+  /// This function runs  a time step
+  void transient_non_linear_step(
+    const int  & t_in,                 ///< initial time iteration      (in)
+    const int  & t_step,               ///< running time iteration      (in)
+    const int  & print_step,           ///< print every                 (in)
+    double     &  time,                ///< running time                (in)
+    double     &  dt                   ///< step time                   (in)
+  );
   /// This function  prints a file time.****.xmf in RESU
   void transient_print_xmf(
     int t_init                          ///< initial time iteration     (in)

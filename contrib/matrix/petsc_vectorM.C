@@ -815,7 +815,7 @@ void PetscVectorM::print_hdf5(std::string file) const {
   hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
   hid_t dataset = H5Dcreate(fileP,name.str().c_str(),H5T_NATIVE_INT,
                             dataspace , H5P_DEFAULT
-   #if HDF5_VERSIONM!=188                        
+   #if HDF5_VERSIONM!=1808                        
                            , H5P_DEFAULT, H5P_DEFAULT                    
     #endif
   );
@@ -828,7 +828,7 @@ void PetscVectorM::print_hdf5(std::string file) const {
   dataspace = H5Screate_simple(2,dimsf, NULL);
   dataset = H5Dcreate(fileP,name.str().c_str(),H5T_NATIVE_DOUBLE,
                       dataspace, H5P_DEFAULT
-  #if HDF5_VERSIONM!=188                        
+  #if HDF5_VERSIONM!=1808                        
                            , H5P_DEFAULT, H5P_DEFAULT                    
     #endif                      
                      );

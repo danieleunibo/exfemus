@@ -222,7 +222,7 @@ hid_t MGUtils::read_Ihdf5(hid_t file,const std::string & name,int data[]) {
 hid_t MGUtils::read_Dhdf5(hid_t file,const std::string & name,double data[]) {
 
     hid_t  dataset = H5Dopen(file,name.c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     );
@@ -236,7 +236,7 @@ hid_t MGUtils::print_Dhdf5(hid_t file,const std::string & name, hsize_t dimsf[],
     hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
     hid_t dataset = H5Dcreate(file,name.c_str(),H5T_NATIVE_DOUBLE,
                               dataspace, 
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
 			      H5P_DEFAULT, H5P_DEFAULT, 
 #endif
 			      H5P_DEFAULT);
@@ -253,7 +253,7 @@ hid_t MGUtils::print_Ihdf5(hid_t file,const std::string & name, hsize_t dimsf[],
     hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
     hid_t dataset = H5Dcreate(file,name.c_str(),H5T_NATIVE_INT,
                               dataspace,
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                               H5P_DEFAULT, H5P_DEFAULT,
 #endif
                               H5P_DEFAULT);
@@ -267,7 +267,7 @@ hid_t MGUtils::print_Ihdf5(hid_t file,const std::string & name, hsize_t dimsf[],
 hid_t MGUtils::read_Ihdf5(hid_t file,const std::string & name,int data[]) {
 
     hid_t  dataset = H5Dopen(file,name.c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif  
     );

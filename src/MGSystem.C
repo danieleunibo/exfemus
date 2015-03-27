@@ -420,7 +420,7 @@ void  MGSystem::read_data(const std::string & file_name   // <-file name
        for(int  kc=0; kc<_n_data[0]+_n_data[1]; kc++) {
       std::ostringstream Name(""); Name << "DATA" << kc;
       status=H5Dread(H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
       , H5P_DEFAULT
 #endif	
       ),
@@ -469,7 +469,7 @@ void  MGSystem::print_data_view(
   hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
   hid_t dataset = H5Dcreate(file_id,dir_name.c_str(),H5T_NATIVE_DOUBLE,
                             dataspace, 
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
 			    H5P_DEFAULT, H5P_DEFAULT, 
 #endif
 			    H5P_DEFAULT);
@@ -507,7 +507,7 @@ void  MGSystem::print_data(const std::string & filename)const {
     hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
     hid_t dataset = H5Dcreate(fileP,name.str().c_str(),H5T_NATIVE_DOUBLE,
                              dataspace, H5P_DEFAULT 
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
 			     , H5P_DEFAULT, H5P_DEFAULT
 #endif
 			     );

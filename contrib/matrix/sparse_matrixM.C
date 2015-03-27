@@ -262,7 +262,7 @@ void SparseMatrixM::read_len_hdf5(const std::string namefile,  // file name
   else name_dst <<"LEN"<< mode;
   
   hid_t dataset=H5Dopen(file_id,name_dst.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
@@ -274,7 +274,7 @@ void SparseMatrixM::read_len_hdf5(const std::string namefile,  // file name
   else name_dst <<"OFFLEN"<< mode;
 
   dataset=H5Dopen(file_id,name_dst.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
@@ -296,7 +296,7 @@ void SparseMatrixM::read_pos_hdf5(const std::string namefile,  // file name
 
   std::ostringstream name_dst;  name_dst.str(""); name_dst << "POS" <<mode;
   hid_t dataset=H5Dopen(file_id,name_dst.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );
@@ -318,7 +318,7 @@ int SparseMatrixM::read_dim_hdf5(const std::string namefile, // file name
   else name_label <<"DIM"<< mode;
   
   hid_t dataset=H5Dopen(file_id,name_label.str().c_str()
-     #if HDF5_VERSIONM!=188                        
+     #if HDF5_VERSIONM!=1808                        
                         , H5P_DEFAULT                    
     #endif
   );

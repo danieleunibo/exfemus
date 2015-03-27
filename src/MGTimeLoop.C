@@ -91,19 +91,24 @@ void MGTimeLoop::transient_onestep(
 #if PRINT_TIME==1 // only for cpu time check ----------------------------------
   std::clock_t  start_time=std::clock();
 #endif   // ------------------------------------------------------------------- 
-  std::cout << "\n  ** Solving time step " << t_step+1
-            << ", time = " << time + dt << " ***" << std::endl;
+  std::cout << "\n  ** Solving time step " << t_step
+            << ", time = " << time << " ***" << std::endl;
+            
+#ifndef CONTROL_PROBLEM
   _mgeqmap.eqnmap_timestep_loop(time, t_step-t_in); // solve one step
+#else
+  _mgeqmap.eqnmap_timestep_loop_control(time, t_step-t_in); // solve one step in control problems
+#endif
 #if PRINT_TIME==1 // only for cpu time check ----------------------------------
   std::clock_t    end_time=std::clock();
 #endif            // ----------------------------------------------------------
   // B) print iteration t_step every print_step ****************************
   // print solution in xdmf format
-  if((t_step+1-t_in)%print_step == 0) {
-    _mgeqmap.print_soln(t_step+1);      // print sol.N.h5 and sol.N.xmf
-    _mgeqmap._mgmesh.write_c(t_step+1); // print mesh.N.h5
+  if(((t_step-t_in)/print_step)*print_step == (t_step-t_in) && t_step-t_in>0) {
+    _mgeqmap.print_soln(t_step);      // print sol.N.h5 and sol.N.xmf
+    _mgeqmap._mgmesh.write_c(t_step); // print mesh.N.h5
   }
-  time += dt;
+//   time += dt;
 #if PRINT_TIME==1 // only for cpu time check -----------------------------------
   std::clock_t    end_time2=std::clock();
   std::cout <<" Time solver ----->= " << double(end_time- start_time) / CLOCKS_PER_SEC
@@ -114,7 +119,43 @@ void MGTimeLoop::transient_onestep(
   return;
 }
 
+// ===========================================================================
+/// This function controls the transient loop
+void MGTimeLoop::transient_non_linear_step(
+    const int  & t_in,                 ///< initial time iteration      (in)
+    const int  & t_step,               ///< running time iteration      (in)
+    const int  & print_step,           ///< print every                 (in)
+    double     &  time,                ///< running time                (in)
+    double     &  dt                   ///< step time                   (in)  
+)  { // =====================================================================
 
+  // A Soving the system ****************************************************
+#if PRINT_TIME==1 // only for cpu time check ----------------------------------
+  std::clock_t  start_time=std::clock();
+#endif   // ------------------------------------------------------------------- 
+  std::cout << "\n  ** Solving non linear time step " << t_step
+            << ", time = " << time << " ***" << std::endl;
+            
+  _mgeqmap.eqnmap_timestep_loop_nonlinear(time, t_step-t_in-1); // solve one step
+#if PRINT_TIME==1 // only for cpu time check ----------------------------------
+  std::clock_t    end_time=std::clock();
+#endif            // ----------------------------------------------------------
+  // B) print iteration t_step every print_step ****************************
+  // print solution in xdmf format
+  if(((t_step-t_in)/print_step)*print_step == (t_step-t_in) && t_step-t_in>0) {
+    _mgeqmap.print_soln(t_step);      // print sol.N.h5 and sol.N.xmf
+    _mgeqmap._mgmesh.write_c(t_step); // print mesh.N.h5
+  }
+//   time += dt;
+#if PRINT_TIME==1 // only for cpu time check -----------------------------------
+  std::clock_t    end_time2=std::clock();
+  std::cout <<" Time solver ----->= " << double(end_time- start_time) / CLOCKS_PER_SEC
+            <<" Time printing ----->= " << double(end_time2- end_time) / CLOCKS_PER_SEC <<
+            std::endl;
+#endif  // ----------------------------------------------------------------------
+
+  return;
+}
 
 // ============================================================================
 /// Xdmf transient  print
@@ -142,9 +183,9 @@ void MGTimeLoop::transient_onestep(
   int nprt=1;
   std::string gname[3];  gname[0]=basesol;
 
-#ifdef TWO_PHASE
-  nprt=3;        gname[1]="int";        gname[2]="ccf";
-#endif
+// #ifdef TWO_PHASE
+//   nprt=3;        gname[1]="int";        gname[2]="ccf";
+// #endif
   //   Mesh -----------------------------------
   out << "<?xml version=\"1.0\" ?> \n";
   out << "<!DOCTYPE Xdmf SYSTEM "
@@ -154,7 +195,7 @@ void MGTimeLoop::transient_onestep(
   for(int kp=0; kp< nprt; kp++)    {
     out << "<Grid Name=\""<< gname[kp].c_str() <<"\"  GridType=\"Collection\" CollectionType=\"Temporal\"> \n";
     // time loop for grid sequence
-    for(int it=t_init+1; it<=t_init+nsteps; it++) if(it%print_step ==0)   {
+    for(int it=t_init; it<=t_init+nsteps; it=it+print_step) /*if(it%print_step ==0)*/   {
         out << "<xi:include href=\""
             << basesol << "."
             << setw(ndigits) << setfill('0') << it <<  ".xmf" << "\""

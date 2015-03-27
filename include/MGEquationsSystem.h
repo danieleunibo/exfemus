@@ -62,6 +62,8 @@ public:
 
   void setDofBcOpIc() ;
   void eqnmap_timestep_loop(const double time, const int delta_t_step_in);
+  void eqnmap_timestep_loop_nonlinear(const double time, const int delta_t_step_in);
+  void eqnmap_timestep_loop_control(const double time, const int delta_t_step_in); //for control problem
 //------------------------------------------------------------------------------------------------
   ///@{ \name READ-PRINT FUNCTIONS 
   void print_soln(const int t_step); ///< Print solution
@@ -72,7 +74,7 @@ public:
   void read_soln(const int t_step);  
   ///@}
 #ifdef TWO_PHASE
-  void  readCC(const uint t_init);
+  void  readCC(const int t_init);
 #endif
 //-------------------------------------------------------------------------------------------------
 private:
@@ -83,12 +85,12 @@ private:
  void print_case_xmf(const int t_init,const int n_lines,const int n_lin);
  void print_case_h5(const int t_init);
  ///@}
- #ifdef TWO_PHASE
- /// Print xmf file CC solution
-  void print_xmfCC(std::ofstream & out,const uint t_init, const uint n_lines,const uint n_cells);  
- /// Print CC solution in hdf5 format
-  void print_h5CC(hid_t file,const uint flag_print,uint *n_l_out,uint *n_c_out); 
-#endif
+//  #ifdef TWO_PHASE
+//  /// Print xmf file CC solution
+//   void print_xmfCC(std::ofstream & out,const int t_init, const uint n_lines,const uint n_cells);  
+//  /// Print CC solution in hdf5 format
+//   void print_h5CC(hid_t file,const uint flag_print,int *n_l_out,uint *n_c_out); 
+// #endif
 
 };
 

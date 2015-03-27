@@ -118,7 +118,8 @@ public:
   
   void get_el_nodes( const int  el_nnodes,const int  bdry,const int  Level,const int  iel, double xx[])
   const; ///< Get element nodes
-  void get_el_nod_disp(const int  bdry,const int  Level,const int  iel,/*int  el_conn[],*/ double xx[]) const;
+    void get_el_nod_disp(const int  bdry,const int  Level,const int  iel,
+                       /*int  el_conn[],*/ double xx[]) const;
   /// Get element connectivity
   void get_el_conn( const int  el_nnodes,const int bdry,const int  Level,const int  iel,int  el_conn[]) const;
   /// Get element neighbours from local processor

@@ -157,7 +157,7 @@ void InterfaceFunctionM::set_mesh_interface_nodeID(
   const int order_cmp                          ///< order pt (1 or 2) (in)
 ) { // ========================================================================
 
-  double toll_dist=1.e-12;
+  double toll_dist=1.e-10;
 //   _nodeID.clear();  // clear map node: FEMus-mesh -> MED-mesh
 
   // Femus-mesh
@@ -195,7 +195,7 @@ void InterfaceFunctionM::set_mesh_interface_nodeID(
 
     //build xyz_mg and nodeid_mg finding nodes on boundary interface (interface_id) from mg mesh
     for(int i=0; i<n_nodes_mg; i++) { // cycle on mg nodes
-      if(fabs(mesh->_bc_id[i]) == interface_id) {
+      if(fabs(mesh->_bc_id[i]) == interface_id || interface_id < 10) {
         n_bd_nodes++;
         for(int idim=0; idim<dim_mg; idim++)  xyz_mg.push_back(mesh->_xyz[i+idim*n_nodes_mg]); // d->getIJ(i, idim);
         nodeid_mg.push_back(i);
@@ -263,7 +263,7 @@ void InterfaceFunctionM::set_mesh_interface_nodeID(
 //   }
 #ifdef PRINT_MED
  std::cout << "====interface_id= "<<  interface_id << "with nodes" <<  n_bd_nodes << "\n";
- printOn(std::cout,interface_id);
+//  printOn(std::cout,interface_id);
 #endif
   xyz_mg.clear(); nodeid_mg.clear();
   dist_med.clear();
@@ -528,7 +528,7 @@ void InterfaceFunctionM::set_field(
   *_field=*f;
 
   _field->setName(f->getName());
-  _field->checkCoherency();
+//   _field->checkCoherency();
 
   std::cout << "InterfaceFunctionM::set_field \n";
 

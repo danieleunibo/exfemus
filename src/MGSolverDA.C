@@ -155,7 +155,7 @@ for(int iname=0;iname<n_equations;iname++)
 if(pbName[iname]== NS_F || pbName[iname]==NSX_F || pbName[iname]==NSY_F || pbName[iname]==NSZ_F){ 
 #if (NS_EQUATIONS%2==0)  /// [1] Pressure -> (NSP_EQUATIONS)
   _data_eq[1].tab_eqs[P_F]=n_index;                      //  table
-  _data_eq[1].mg_eqs[n_index]=_mgeqnmap.get_eqs("NS1P"); //Navier-Stokes equation pointer
+  _data_eq[1].mg_eqs[n_index]=_mgeqnmap.get_eqs("NSP"); //Navier-Stokes equation pointer
   _data_eq[1].indx_ub[n_index+1] =_data_eq[1].indx_ub[n_index]+1;  // _data_eq[2].ub index
   _data_eq[1].n_eqs++;  // number of quadratic system
   n_index++; // update counter
@@ -163,16 +163,20 @@ if(pbName[iname]== NS_F || pbName[iname]==NSX_F || pbName[iname]==NSY_F || pbNam
  }
 #endif
 // --------------  FSI ------------------------------
-#ifdef FSIP_EQUATIONS
-for(int iname=0;iname<n_equations;iname++) if(pbName[iname]== 100){
+#ifdef FSI_EQUATIONS
+#if (FSI_EQUATIONS%2==0)
+for(int iname=0;iname<n_equations;iname++){ 
+//   if(pbName[iname]== 100){
 //  #if (FSIP_EQUATIONS%2==0)  /// [1] Pressure -> (FSIP_EQUATIONS)
   _data_eq[1].tab_eqs[P_F]=n_index;                      //  table
-  _data_eq[1].mg_eqs[n_index]=_mgeqnmap.get_eqs("FSI1P"); //Navier-Stokes equation pointer
+  _data_eq[1].mg_eqs[n_index]=_mgeqnmap.get_eqs("FSIP"); //Navier-Stokes equation pointer
   _data_eq[1].indx_ub[n_index+1] =_data_eq[1].indx_ub[n_index]+1;  // _data_eq[2].ub index
   _data_eq[1].n_eqs++;  // number of quadratic system
   n_index++; // update counter
 //  #endif
-}
+// }
+} 
+#endif
 #endif
 #ifdef DA1_EQUATIONS
 for(int iname=0;iname<n_equations;iname++) if(pbName[iname]== 100){
@@ -316,18 +320,18 @@ for(int iname=0;iname<n_equations;iname++) if(pbName[iname]== 100){
 #ifdef FSI_EQUATIONS
 for(int iname=0;iname<n_equations;iname++) if(pbName[iname]== FS_F){
 #if FSI_EQUATIONS==2
-  _data_eq[2].tab_eqs[NSX_F]=n_index;                                    // table
+  _data_eq[2].tab_eqs[FSX_F]=n_index;                                    // table
   _data_eq[2].mg_eqs[n_index]=_mgeqnmap.get_eqs("FSI0X");                // FSI equation pointer
   _data_eq[2].indx_ub[n_index+1] =_data_eq[2].indx_ub[n_index]+1; // _data_eq[2].ub index
   _data_eq[2].n_eqs++;                                               // number of quadratic system
   n_index++;   // update counter
-  _data_eq[2].tab_eqs[NSY_F]=n_index;                                    // table
+  _data_eq[2].tab_eqs[FSY_F]=n_index;                                    // table
   _data_eq[2].mg_eqs[n_index]=_mgeqnmap.get_eqs("FSI0Y");                // FSI equation pointer
   _data_eq[2].indx_ub[n_index+1] =_data_eq[2].indx_ub[n_index]+1; // _data_eq[2].ub index
   _data_eq[2].n_eqs++;                                               // number of quadratic system
   n_index++;
 #if DIMENSION==3
-  _data_eq[2].tab_eqs[NSZ_F]=n_index;                                    // table
+  _data_eq[2].tab_eqs[FSZ_F]=n_index;                                    // table
   _data_eq[2].mg_eqs[n_index]=_mgeqnmap.get_eqs("FSI0Z");                // FSI equation pointer
   _data_eq[2].indx_ub[n_index+1] =_data_eq[2].indx_ub[n_index]+1; // _data_eq[2].ub index
   _data_eq[2].n_eqs++;                                               // number of quadratic system
@@ -518,17 +522,19 @@ for(int iname=0;iname<n_equations;iname++) if(pbName[iname]== KTT_F){
 //            " Froud number    = " << 1./_IFr <<"\n";
   std::cout<< " -------------------------- \n"<< " External fields: \n";
   for(int iql=0; iql<3; iql++) {
+     std::cout<< " List eq.s with pol. order  "<< iql << ": " << _data_eq[iql].n_eqs << " equations \n";
     for(int k=0; k<_data_eq[iql].n_eqs; k++) {  // ql system index
       std::cout<< " Index= " <<k << " System= "<< _data_eq[iql].mg_eqs[k]->_eqname.c_str()<<";  Variables: ";
-      int sumk1=0;
-      for(int deg=iql; deg>-1; deg--) {  // degree= 0 -> const; =1 -> linear; =2 -> quad
-        std::cout<< " Number of "<< deg << "-order  external  fields " << _data_eq[deg].n_eqs << ";\n";
-        for(int k1=0; k1<_data_eq[deg].indx_ub[k+1]-_data_eq[deg].indx_ub[k]; k1++) {
-          std::cout<< " "<< _data_eq[deg].mg_eqs[k]->_var_names[sumk1];
-          sumk1++;
+//        int sumk1=0;
+//       for(int deg=iql; deg>-1; deg--) {  // degree= 0 -> const; =1 -> linear; =2 -> quad
+             
+//               std::cout<< " Number of "<< deg << "-order  external  fields " << _data_eq[deg].n_eqs << ";\n";
+        for(int k1=0; k1<   _data_eq[iql].mg_eqs[k]->_n_vars; k1++) {
+          std::cout<< " "<< _data_eq[iql].mg_eqs[k]->_var_names[k1];
+//           sumk1++;
         }
         std::cout <<"\n";
-      }
+//       }
     }
   }
   std::cout<< "\n ======================= "  <<"\n";
@@ -598,7 +604,7 @@ void MGSolDA::GenIc() {
     // Getting dataset
     std::ostringstream Name; Name << "NODES/COORD/BC";
     hid_t dtset = H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                             ,H5P_DEFAULT
 #endif
                          );
@@ -616,7 +622,7 @@ void MGSolDA::GenIc() {
     // Getting dataset
       std::ostringstream Name1; Name1 << "ELEMS/SUB/MAT";
       dtset = H5Dopen(file_id,Name1.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                      ,H5P_DEFAULT
 #endif
                      );
@@ -721,7 +727,7 @@ void MGSolDA::GenBc(
   // Getting dataset ----------------------------------------------------------
   std::ostringstream Name; Name << "NODES/COORD/BC";
   hid_t dtset = H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                       ,H5P_DEFAULT
 #endif
                        );
@@ -744,7 +750,7 @@ void MGSolDA::GenBc(
     // Getting dataset --------------------------------------------------------
     std::ostringstream Name1; Name1 << "ELEMS/SUB/MAT";
     dtset = H5Dopen(file_id,Name1.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
                   ,H5P_DEFAULT
 #endif
                    );
@@ -1728,6 +1734,10 @@ void MGSolDA::init(const int Level) {
   x_old[Level]->init(n_glob,false, SERIALM);
   x_oold[Level] = NumericVectorM::build(comm1).release();
   x_oold[Level]->init(n_glob,false, SERIALM);
+  x_nonl[Level] = NumericVectorM::build(comm1).release();
+  x_nonl[Level]->init(n_glob,false, SERIALM);
+  x_user[Level] = NumericVectorM::build(comm1).release();
+  x_user[Level]->init(n_glob,false, SERIALM);
   disp[Level] = NumericVectorM::build(comm1).release();
   disp[Level]->init(n_glob,false, SERIALM);
 
@@ -2982,7 +2992,50 @@ void MGSolDA::ic_read(
   //xp[0]*(1.-xp[0])*xp[1]*(1.-xp[1]);
 }
 
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+void MGSolDA::MGTimeStep_nl_setup(const double time, const int) {
 
+  std::cout  << std::endl << "  " << _eqname.c_str() << " solution "  << std::endl;
 
+  /// [a] Assemblying of the rhs and matrix at the top level with GenMatRhs(time,top_level,1)
+#if  PRINT_TIME==1
+  std::clock_t start_time=std::clock();
+#endif
+  GenMatRhs(time,_NoLevels-1,1);
 
+  /// [b] Assemblying of the other matrices with GenMatRhs(time,level,0) for all levels
+  for(int Level = 0 ; Level < _NoLevels-1; Level++) GenMatRhs(time,Level,0);
+
+#if    PRINT_TIME==1
+  std::clock_t end_time=std::clock();
+  std::cout << " Assembly time ="<< double(end_time- start_time) / CLOCKS_PER_SEC
+            << " s "<< std::endl;
+#endif
+  /// [c] Solution of the linear system (MGSolverBase::MGSolve).
+  MGSolve(1.e-6,40);
+#if    PRINT_TIME==1
+  std::clock_t end_timef=std::clock();
+  std::cout << " Assembly+solution time ="<< double(end_timef- start_time) / CLOCKS_PER_SEC
+            << "s "<< std::endl;
+#endif
+  return;
+}
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+int MGSolDA::MGTimeStep_nl_iter(const double time, const int) {
+return 0;
+}
+
+/// ======================================================
+/// This function controls the time step operations:
+/// ======================================================
+void MGSolDA::MGTimeStep_nl_sol_up(const double time, const int) {
+
+  /// [d] Update of the old solution at the top Level
+  x[_NoLevels-1]->localize(*x_old[_NoLevels-1]);
+  return;
+}
 // #endif

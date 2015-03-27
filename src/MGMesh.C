@@ -145,7 +145,6 @@ void MGMesh::get_el_nodes(
   }
   return;
 }
-
 // ===============================================================
 /// This function return the element connectivity and  coordinates
 // ==============================================================
@@ -158,7 +157,20 @@ void MGMesh::get_el_nod_disp(
 ) const {// =================================
 
   const int  el_nnodes= _GeomEl.n_q[bdry]; // element nodes
-
+//   const int  offset   =_NoNodes[_NoLevels-1];
+//   // element  definition
+//   for(int  inode=0; inode<el_nnodes; inode++)    {
+//     //get the global node number
+// //     el_conn[inode] = _el_map[bdry][(iel+_off_el[bdry][Level+_NoLevels*_iproc])*el_nnodes+inode];
+//     // get the element coordinades
+//     for(int  idim=0; idim<_dim; idim++) {
+//       xx[inode+idim*el_nnodes] = _dxdydz[el_conn[inode]+idim*offset];
+// //       xx[inode+idim*el_nnodes] = _xyz[el_conn[inode]+idim*offset]+_dxdydz[el_conn[inode]+idim*offset];
+// 
+// //        xx[inode+idim*el_nnodes] = _dxdydz[el_conn[inode]+idim*offset];
+//     }
+//   }
+  
     // element  definition
   for(int  n=0; n<el_nnodes; n++)    {
     //get the global node number
@@ -496,7 +508,7 @@ void MGMesh::read_c() {  // ======================
     // Reading DFL -------------------------
     int  topdata[4];
     status=H5Dread(H5Dopen(file_id, "/DFLS"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif 
     ),H5T_NATIVE_INT,H5S_ALL,H5S_ALL,H5P_DEFAULT,topdata);
@@ -508,7 +520,7 @@ void MGMesh::read_c() {  // ======================
     // Reading _type_FEM ------------
     int  n_meshes= _NoFamFEM*_NoLevels; _type_FEM=new int [n_meshes];
     status=H5Dread(H5Dopen(file_id,"/FEM"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif 
     ),H5T_NATIVE_INT,H5S_ALL,H5S_ALL,H5P_DEFAULT,_type_FEM);
@@ -517,7 +529,7 @@ void MGMesh::read_c() {  // ======================
     // Reading _NoNodes ------------------
     _NoNodes=new int [n_meshes+1];
     status=H5Dread(H5Dopen(file_id,"/NODES/MAP/NDxLEV"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),H5T_NATIVE_INT,H5S_ALL,H5S_ALL,H5P_DEFAULT,_NoNodes);
@@ -531,7 +543,7 @@ void MGMesh::read_c() {  // ======================
     for(int  kc=0; kc<_dim; kc++) {
       std::ostringstream Name; Name << "NODES/COORD/X" << kc+1;
       status=H5Dread(H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif        
       ),H5T_NATIVE_DOUBLE,H5S_ALL,H5S_ALL,H5P_DEFAULT,coord);
@@ -546,14 +558,14 @@ void MGMesh::read_c() {  // ======================
     _off_nd[0]=new int[_n_subdom*_NoLevels+1];
 
     status=H5Dread(H5Dopen(file_id, "/NODES/MAP/OFF_ND"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
    ),
                    H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT,_off_nd[0]);
     _off_nd[1]=new int[_n_subdom*_NoLevels+1];
     status=H5Dread(H5Dopen(file_id, "/NODES/MAP/OFF_ND1"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
@@ -565,14 +577,14 @@ void MGMesh::read_c() {  // ======================
     _off_el=new int*[_NoFamFEM];                 //volume and boundary
     _off_el[0]=new int [_n_subdom*_NoLevels+1];  //offset for VOLUME
     status=H5Dread(H5Dopen(file_id, "/ELEMS/FEM0/OFF_EL"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
                    H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT,_off_el[0]);
     _off_el[1]=new int [_n_subdom*_NoLevels+1];  //offset for boundary
     status=H5Dread(H5Dopen(file_id, "/ELEMS/FEM1/OFF_EL"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
@@ -585,7 +597,7 @@ void MGMesh::read_c() {  // ======================
       std::ostringstream Name; Name << "/ELEMS/FEM"<< ifem  <<"/NExLEV";
       status=H5Dread(H5Dopen(file_id,Name.str().c_str()
    
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
       ),
@@ -603,7 +615,7 @@ void MGMesh::read_c() {  // ======================
       // hdf5 reading
       std::ostringstream Name; Name << "/NODES/MAP/MAP"<< ilev;           // filename
       status= H5Dread(H5Dopen(file_id, Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
       
@@ -618,7 +630,7 @@ void MGMesh::read_c() {  // ======================
     // hdf5 reading
     std::ostringstream Name; Name << "/NODES/MAP/MAP"<<_NoLevels;       // filename
     status= H5Dread(H5Dopen(file_id, Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
@@ -631,7 +643,7 @@ void MGMesh::read_c() {  // ======================
     _el_map=new int *[_NoFamFEM];
     _el_map[0]=new int  [_off_el[0][_NoLevels*_n_subdom]*NDOF_FEM];  // Volume
     status= H5Dread(H5Dopen(file_id, "/ELEMS/FEM0/MSH"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),// Read from file
@@ -639,7 +651,7 @@ void MGMesh::read_c() {  // ======================
 
     _el_map[1]=new int  [_off_el[1][_NoLevels*_n_subdom]*NDOF_FEMB];  // Boundary
     status= H5Dread(H5Dopen(file_id, "/ELEMS/FEM1/MSH"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ), // Read from file
@@ -651,7 +663,7 @@ void MGMesh::read_c() {  // ======================
     _el_neighbor=new int*[_NoFamFEM-1]; //now only for the volume family
     _el_neighbor[0]=new int [_off_el[0][_NoLevels*_n_subdom]*NDOF_FEM];  // Volume
     status= H5Dread(H5Dopen(file_id, "/ELEMS/FEM0/EL_NEIG"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),// Read from file
@@ -694,7 +706,7 @@ void MGMesh::read_c() {  // ======================
     // Reading DFL -------------------------
     int  topdata[4];
     status=H5Dread(H5Dopen(file_id, "/DFLS"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
       
@@ -707,7 +719,7 @@ void MGMesh::read_c() {  // ======================
     // Reading _type_FEM ------------
     int  n_meshes= _NoFamFEM*_NoLevels; _type_FEM=new int [n_meshes];
     status=H5Dread(H5Dopen(file_id,"/FEM"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),H5T_NATIVE_INT,H5S_ALL,H5S_ALL,H5P_DEFAULT,_type_FEM);
@@ -716,7 +728,7 @@ void MGMesh::read_c() {  // ======================
     // Reading _NoNodes ------------------
     _NoNodes=new int [n_meshes+1];
     status=H5Dread(H5Dopen(file_id,"/NODES/MAP/NDxLEV"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),H5T_NATIVE_INT,H5S_ALL,H5S_ALL,H5P_DEFAULT,_NoNodes);
@@ -730,7 +742,7 @@ void MGMesh::read_c() {  // ======================
     for(int  kc=0; kc<_dim; kc++) {
       std::ostringstream Name; Name << "NODES/COORD/X" << kc+1;
       status=H5Dread(H5Dopen(/*file_id*/file_id_xyz,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
       
@@ -747,14 +759,14 @@ void MGMesh::read_c() {  // ======================
     _off_nd[0]=new int[_n_subdom*_NoLevels+1];
 
     status=H5Dread(H5Dopen(file_id, "/NODES/MAP/OFF_ND"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
                   H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT,_off_nd[0]);
     _off_nd[1]=new int[_n_subdom*_NoLevels+1];
     status=H5Dread(H5Dopen(file_id, "/NODES/MAP/OFF_ND1"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
@@ -766,14 +778,14 @@ void MGMesh::read_c() {  // ======================
     _off_el=new int*[_NoFamFEM];                 //volume and boundary
     _off_el[0]=new int [_n_subdom*_NoLevels+1];  //offset for VOLUME
     status=H5Dread(H5Dopen(file_id, "/ELEMS/FEM0/OFF_EL"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
                    H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT,_off_el[0]);
     _off_el[1]=new int [_n_subdom*_NoLevels+1];  //offset for boundary
     status=H5Dread(H5Dopen(file_id, "/ELEMS/FEM1/OFF_EL"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
    ),
@@ -785,7 +797,7 @@ void MGMesh::read_c() {  // ======================
       _NoElements[ifem]=new int [_NoLevels];
       std::ostringstream Name; Name << "/ELEMS/FEM"<< ifem  <<"/NExLEV";
       status=H5Dread(H5Dopen(file_id,Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
       ),
@@ -803,7 +815,7 @@ void MGMesh::read_c() {  // ======================
       // hdf5 reading
       std::ostringstream Name; Name << "/NODES/MAP/MAP"<< ilev;           // filename
       status= H5Dread(H5Dopen(file_id, Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
       ),  // read from file
@@ -817,7 +829,7 @@ void MGMesh::read_c() {  // ======================
     // hdf5 reading
     std::ostringstream Name; Name << "/NODES/MAP/MAP"<<_NoLevels;       // filename
     status= H5Dread(H5Dopen(file_id, Name.str().c_str()
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),
@@ -830,7 +842,7 @@ void MGMesh::read_c() {  // ======================
     _el_map=new int *[_NoFamFEM];
     _el_map[0]=new int  [_off_el[0][_NoLevels*_n_subdom]*NDOF_FEM];  // Volume
     status= H5Dread(H5Dopen(file_id, "/ELEMS/FEM0/MSH"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
    ),// Read from file
@@ -838,7 +850,7 @@ void MGMesh::read_c() {  // ======================
 
     _el_map[1]=new int  [_off_el[1][_NoLevels*_n_subdom]*NDOF_FEMB];  // Boundary
     status= H5Dread(H5Dopen(file_id, "/ELEMS/FEM1/MSH"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ), // Read from file
@@ -850,7 +862,7 @@ void MGMesh::read_c() {  // ======================
     _el_neighbor=new int*[_NoFamFEM-1]; //now only for the volume family
     _el_neighbor[0]=new int [_off_el[0][_NoLevels*_n_subdom]*NDOF_FEM];  // Volume
     status= H5Dread(H5Dopen(file_id, "/ELEMS/FEM0/EL_NEIG"
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT
 #endif
     ),// Read from file
@@ -918,7 +930,7 @@ void MGMesh::write_c(const int  t_step) {
   hsize_t dimsf[2]; dimsf[0] =3;  dimsf[1] = 1;
   hid_t dtsp = H5Screate_simple(2, dimsf, NULL);
   hid_t dtset = H5Dcreate(file,"DFL",H5T_NATIVE_INT,dtsp,H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     ,H5P_DEFAULT,H5P_DEFAULT
 #endif    
   );
@@ -929,7 +941,7 @@ void MGMesh::write_c(const int  t_step) {
   dimsf[0] =n_meshes;  dimsf[1] = 1;
   dtsp = H5Screate_simple(2, dimsf, NULL);
   dtset = H5Dcreate(file,"FEM",H5T_NATIVE_INT,dtsp,H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT,H5P_DEFAULT
 #endif 
   );
@@ -940,12 +952,12 @@ void MGMesh::write_c(const int  t_step) {
 
   // Create a group named "/MyGroup" in the file.
   hid_t   group_id = H5Gcreate(file, "NODES", H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT, H5P_DEFAULT
 #endif    
   );
   hid_t   group_id2 = H5Gcreate(file, "NODES/COORD", H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     , H5P_DEFAULT, H5P_DEFAULT
 #endif    
   );
@@ -954,7 +966,7 @@ void MGMesh::write_c(const int  t_step) {
   dimsf[0] = n_meshes;  dimsf[1] = 1;
   dtsp =H5Screate_simple(2, dimsf, NULL);
   dtset=H5Dcreate(file,"/NNODES",H5T_NATIVE_INT,dtsp,H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     ,H5P_DEFAULT,H5P_DEFAULT
 #endif    
   );
@@ -970,7 +982,7 @@ void MGMesh::write_c(const int  t_step) {
     dtsp = H5Screate_simple(2, dimsf, NULL);
     for(int  v = 0; v < n_nodes; v++) coord[v] = _xyz[v+kc*n_nodes] + _dxdydz[v+kc*n_nodes];
     dtset=H5Dcreate(file,Name.str().c_str(),H5T_NATIVE_DOUBLE,dtsp,H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     ,H5P_DEFAULT,H5P_DEFAULT
 #endif      
     );
@@ -1002,7 +1014,7 @@ void MGMesh::write_c(const int  t_step) {
   dtsp = H5Screate_simple(2, dimsf, NULL);
   for(int  v = 0; v < n_nodes; v++) coord[v] = 0.;
   dtset=H5Dcreate(file,Name.str().c_str(),H5T_NATIVE_DOUBLE,dtsp,H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     ,H5P_DEFAULT,H5P_DEFAULT
 #endif    
   );
@@ -1169,7 +1181,7 @@ void MGMesh::print_conn_lin_hf5(
     hsize_t dimsf[2];   dimsf[0] =n_elements*nsubel*nnodes;  dimsf[1] = 1;
     hid_t dtsp = H5Screate_simple(2, dimsf, NULL);
     hid_t dtset = H5Dcreate(file,Name.str().c_str(),H5T_NATIVE_INT,dtsp,H5P_DEFAULT
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
     ,H5P_DEFAULT,H5P_DEFAULT
 #endif      
     );
@@ -1208,7 +1220,7 @@ void MGMesh::print_subdom_hf5(
   hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
   hid_t dataset = H5Dcreate(file_id,"PID",H5T_NATIVE_DOUBLE,
                             dataspace, H5P_DEFAULT 
-#if HDF5_VERSIONM == 1812
+#if HDF5_VERSIONM != 1808
 			    ,H5P_DEFAULT, H5P_DEFAULT
 #endif
 			   );
@@ -1253,7 +1265,7 @@ void MGMesh::print_dist_hf5(
   hid_t dataspace = H5Screate_simple(2,dimsf, NULL);
   hid_t dataset = H5Dcreate(file_id,dir_name.c_str(),H5T_NATIVE_DOUBLE,
                             dataspace, H5P_DEFAULT
-#if HDF5_VERSIONM == 1812			    
+#if HDF5_VERSIONM != 1808			    
 			    ,H5P_DEFAULT, H5P_DEFAULT
 #endif
 			   );

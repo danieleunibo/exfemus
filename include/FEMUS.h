@@ -48,7 +48,7 @@ protected:
   // system data ---------------------------------------------------------------------------
   //   _LibMeshProblem * _problem;
   EquationSystemsExtendedM*           _mg_equations_map; // system
-  MGTimeLoop *                            _mg_time_loop;     // transient
+  MGTimeLoop *                        _mg_time_loop;     // transient
 
 
   // ==========================================================================
@@ -61,11 +61,11 @@ public:
   void init_param(MGUtils &mgutils);
   void init_fem(MGGeomEl & mggeomel,MGFEMap & mgfemap);
   ~FEMUS();
-//   void terminate();
+  void terminate();
 
   void setMesh();
   void setSystem(const std::vector<FIELDS> & pbName,
-      int n_data_points=0,
+     int n_data_points=0,
   int n_data_cell=0
   );
 
@@ -89,9 +89,22 @@ public:
     double     &  dt                   ///< step time
   ) ;
   
-  
+  //=============================================================================
+// This function solves one step  for transient problems
+  void solve_non_linear_onestep(
+    const int  & t_in,                 ///< initial time iteration
+    const int  & t_step,               ///< actual time iteration
+    const int  & print_step,            ///< print every
+    double     &  time,                ///< actual time
+    double     &  dt                   ///< step time
+  ) ;
    const  MeshExtended & get_MGMesh(){return *_mg_mesh;};
    const EquationSystemsExtendedM& get_MGExtSystem(){return *_mg_equations_map;};
+   
+   
+   
+// =================  with MED lib ===============================================
+// =================  with MED lib ===============================================   
 #ifdef HAVE_MED
   void setMedMesh(const std::string & dataFile);
 // // ========================================================================

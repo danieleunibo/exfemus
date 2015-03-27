@@ -53,7 +53,7 @@ void EquationSystemsExtendedM::setBC(
   if(fct == NULL) return;
   fct->set_field(field);
 #ifdef PRINT_MED
-  fct->printOn(std::cout,name);
+//   fct->printOn(std::cout,name);
 #endif
 
   return;
@@ -74,7 +74,7 @@ void EquationSystemsExtendedM::setBC(
     fct->set_analytic_field_elem(s, n_cmp);
   
 #ifdef  PRINT_MED
- fct->printOn(std::cout,name);
+//  fct->printOn(std::cout,name);
 #endif
 
   return;
